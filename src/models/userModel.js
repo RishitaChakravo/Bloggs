@@ -22,6 +22,10 @@ const userSchema = new Schema({
         type: String,
         required: true
     },
+    isLoggedIn : {
+        type: Boolean,
+        default: false
+    },
     verifyToken: String,
     verifyTokenExpiry: Date
 }, {timestamps: true})

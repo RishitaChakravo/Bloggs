@@ -1,6 +1,5 @@
 import User from "@/models/userModel";
 import bcrypt from "bcryptjs";
-import jwt from "jsonwebtoken";
 import nodemailer from 'nodemailer'
 
 export async function sendEmail({email, userId, emailType}: {email: string, userId: string, emailType: string}) {

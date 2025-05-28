@@ -1,6 +1,13 @@
+import Footer from "./components/footer/footer";
+import HeroSec from "./components/heroSec/page";
+import { NavBar } from "./components/navbar/page";
 
 export default function Home() {
   return (
-    <h1 className="text-center text-slate-400">hello world?</h1>
+    <div className="p-0 m-0">
+      <NavBar/>
+      <HeroSec/>
+      <Footer/>
+    </div>
   );
 }
