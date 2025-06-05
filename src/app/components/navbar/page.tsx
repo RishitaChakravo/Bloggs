@@ -2,7 +2,8 @@ import Link from "next/link";
 
 export function NavBar() {
     return (
-        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-black shadow-lg px-10 py-3 text-center sm:flex items-center justify-between rounded-full w-[80%] max-w-5xl">
+        <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-black shadow-lg px-10 py-3 
+        text-center sm:flex items-center justify-between rounded-full w-[50%] max-w-5xl sm:w-[80%]">
             <div>
                 <p className="text-2xl text-blue-600 font-mono font-bold">bloggs</p>
             </div>
