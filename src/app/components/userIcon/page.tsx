@@ -1,11 +1,15 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import Link from "next/link"
 import axios from "axios"
 
 export default function UserIcon() {
     const [hidden, setHidden] = useState(true)
+    const [user, setUser] = useState({
+        username: "",
+        email: ""
+    })
 
     const logout = async () => {
         try {
@@ -15,6 +19,19 @@ export default function UserIcon() {
             console.error("Failed to logout", error)
         }
     }
+
+    useEffect(() => {
+        const getProfile = async () => {
+        try {
+            const response = await axios.get('/api/users/profile')
+            setUser(response.data)
+        } catch (error: any) {
+            console.log("User Data not fetched", error)
+        }
+
+        getProfile();
+    }
+    }, [])
 
     return (
         <>
@@ -43,6 +60,9 @@ export default function UserIcon() {
                                 >
                                 </img>
                             </button>
+                            <p>{user.username}</p>
+                            <p>{user.email}</p>
+                            <p></p>
                             <hr className="w-full" />
                         </div>
                         <ul className="mr-20">
