@@ -13,7 +13,7 @@ export async function POST(request: NextRequest){
         const {content, tags} = await reqbody
 
         if(!content || !tags){
-            return NextResponse.json({error: "Enter all data to form teh blog"}, {status: 400})
+            return NextResponse.json({error: "Enter all data to form the blog"}, {status: 400})
         }
 
         const token = request.cookies.get('token')?.value
