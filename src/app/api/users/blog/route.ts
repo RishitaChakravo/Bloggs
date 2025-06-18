@@ -10,9 +10,9 @@ dbConnect()
 export async function POST(request: NextRequest){
     try {
         const reqbody: any = await request.json()
-        const {content, tags} = await reqbody
+        const {content, tags, title} = await reqbody
 
-        if(!content || !tags){
+        if(!content || !tags || !title ){
             return NextResponse.json({error: "Enter all data to form the blog"}, {status: 400})
         }
 
@@ -20,6 +20,7 @@ export async function POST(request: NextRequest){
         const userId = await getDataFromToken(token!)
 
         const blog = await Blog.create({
+            title,
             content,
             tags,
             author: userId

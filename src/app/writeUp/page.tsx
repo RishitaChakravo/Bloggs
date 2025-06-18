@@ -2,13 +2,16 @@
 
 import axios from "axios";
 import { useState } from "react"
+import { NavBar } from "../components/navbar/page";
 
 export default function WriteUp(){
     type UserData = {
+        title: string,
         content: string;
         tags: string[];
     }
     const [userData, setUserData] = useState<UserData>({
+        title: "",
         content: "",
         tags: []
     })
@@ -16,13 +19,17 @@ export default function WriteUp(){
     async function blogSubmit() {
         try {
             const response = await axios.post("/api/users/blog", userData)
+            console.log("Blog saved successfully", response)
         } catch (error) {
-            
+            console.error("Failed to save the blog")
         }
     }
     return(
         <div className="h-full w-full">
-            <div className="flex flex-col items-center mt-32">
+            <div className="text-center mx-auto my-5 rounded-full w-1/2 h-auto top-0 z-50 bg-black border border-white/30">
+                <p className="text-2xl text-blue-600 font-mono font-bold">bloggs</p>
+            </div>
+            <div className="flex flex-col justify-center items-center h-screen">
                 <div className="grid grid-cols-3 w-[500px]">
                     <button 
                     value="tech"
@@ -34,7 +41,7 @@ export default function WriteUp(){
                             : [...prev.tags, "tech"],
                         }))
                         } 
-                    className="w-[100px] border border-cyan-600 px-3 rounded-md">tech</button>
+                    className="mx-auto w-[100px] border border-cyan-600 px-3 rounded-md">tech</button>
                     <button 
                     onClick={() =>
                         setUserData((prev) => ({
@@ -44,7 +51,7 @@ export default function WriteUp(){
                             : [...prev.tags, "work"],
                         }))
                         } 
-                    className="w-[100px] border border-cyan-600 px-3 rounded-md">work</button>
+                    className="mx-auto w-[100px] border border-cyan-600 px-3 rounded-md">work</button>
                     <button 
                     value="art"
                     onClick={() =>
@@ -55,7 +62,7 @@ export default function WriteUp(){
                             : [...prev.tags, "art"],
                         }))
                         } 
-                    className="w-[100px] border border-cyan-600 px-3 rounded-md">art</button>
+                    className="mx-auto w-[100px] border border-cyan-600 px-3 rounded-md">art</button>
                     <button 
                     value="home"
                     onClick={() =>
@@ -66,7 +73,7 @@ export default function WriteUp(){
                             : [...prev.tags, "home"],
                         }))
                         } 
-                    className="w-[100px] border border-cyan-600 px-3 rounded-md">home</button>
+                    className="mx-auto w-[100px] border border-cyan-600 px-3 rounded-md">home</button>
                     <button 
                     onClick={() =>
                         setUserData((prev) => ({
@@ -76,7 +83,7 @@ export default function WriteUp(){
                             : [...prev.tags, "finance"],
                         }))
                         } 
-                    className="w-[100px] border border-cyan-600 px-3 rounded-md">finance</button>
+                    className="mx-auto w-[100px] border border-cyan-600 px-3 rounded-md">finance</button>
                     <button
                     onClick={() =>
                         setUserData((prev) => ({
@@ -86,10 +93,11 @@ export default function WriteUp(){
                             : [...prev.tags, "adventure"],
                         }))
                         } 
-                    className="w-[100px] border border-cyan-600 px-3 rounded-md">adventure</button>
+                    className="mx-auto w-[100px] border border-cyan-600 px-3 rounded-md">adventure</button>
                 </div>
-                <textarea className="mt-3 w-[500px] h-[300px] rounded-lg border hover:border-2 hover:border-blue-600 transition-all duration-200 ease-in-out
-                p-4 text-base
+                <input placeholder="Title" value={userData.title} type="text" className="w-[500px] rounded-lg my-2 px-2 text-3xl text-gray-900 font-bold"/>
+                <textarea placeholder="Content" className="font-thin text-lg mt-3 w-[500px] h-[500px] rounded-lg border hover:border-2 hover:border-blue-600 transition-all duration-200 ease-in-out
+                p-4
                 text-gray-700
                 hover:shadow-md focus:shadow-lg
                 bg-white placeholder-gray-400
