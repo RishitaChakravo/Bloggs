@@ -3,10 +3,19 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
+import WriteUp from "../writeUp/page"
+import Link from "next/link"
+
+interface Blog {
+  title: string;
+  content: string;
+  _id?: string; // optional, if you're using MongoDB _id
+}
 
 export default function Profile(){
+    
     const [user, setUser] = useState({})
-    const [blogs, setBlogs] = useState([])
+    const [blogs, setBlogs] = useState<Blog[]>([])
     useEffect(() => {
         const getProfile = async () => {
             try {
@@ -44,7 +53,12 @@ export default function Profile(){
                 >    
                 </div>
                 <div className="m-0 w-[180px] h-[180px] border rounded-full bg-indigo-500 relative top-[-50px] left-[30px]"></div>
-                <div className="m-0 w-[100px] h-[50px] border bg-indigo-500 absolute top-[320px] right-[80px]"></div>
+                <div className="m-0 w-[150px] h-[50px] absolute top-[320px] right-[80px]">
+                    <Link href='/writeUp'>
+                        <button 
+                        className="border px-4 mt-1 rounded-lg">+NEW BLOG</button>   
+                    </Link>
+                </div>
                 <div className="px-3 pb-4 w-full flex flex-col justify-center gap-3">
                     <p className="text-3xl font-bold">User Name</p>
                     <div className="w-full flex justify-evenly">
@@ -61,14 +75,22 @@ export default function Profile(){
                 </div>
             </div>
             {blogs.length == 0 && 
-            <div className="text-center mt-2 text-2xl font-sans font-extralight text-white/25">
-                <p>Write New Blogs</p> 
-                <button className="border p">+NEW BLOG</button>   
+            <div className="text-center mt-2 ">
+                <p className="text-2xl font-sans font-extralight text-white/25">Write New Blogs</p> 
+                <Link href='/writeUp'>
+                    <button 
+                    className="border px-4 mt-1 rounded-lg">+NEW BLOG</button>   
+                </Link>
             </div>
             }
             {blogs.length > 0 && 
                 <div className="mt-3 border w-4/5 mx-auto h-auto rounded-xl p-3">
-
+                    <ul>
+                        {blogs.map((blog, index) => (<li key={index}>
+                            <p>{blog.title}</p>
+                            <p>{blog.content}</p>
+                        </li>))}
+                    </ul>
                 </div>
             }
         </div>
