@@ -49,7 +49,7 @@ export async function GET(request: NextRequest) {
         ])
 
         return NextResponse.json({
-            message: "",
+            message: "All blogs successfully fetched",
             success: true,
             data: blogs
         }, {status: 200})
