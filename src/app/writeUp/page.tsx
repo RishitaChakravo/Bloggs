@@ -2,7 +2,6 @@
 
 import axios from "axios";
 import { useState } from "react"
-import { NavBar } from "../components/navbar/page";
 
 export default function WriteUp(){
     type UserData = {
@@ -104,7 +103,7 @@ export default function WriteUp(){
                 focus:ring-4 focus:ring-blue-400 focus:ring-opacity-100
                 " value={userData.content} onChange={(e) => setUserData({...userData, content: e.target.value})}></textarea>
                 
-                <button className="mt-2" onClick={blogSubmit}>Submit</button>
+                <button className="bg-white text-black hover:bg-gray-300 py-1 px-10 rounded-lg mt-2" onClick={blogSubmit}>SUBMIT</button>
             </div>
         </div>
     )

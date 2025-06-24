@@ -7,15 +7,16 @@ export function NavBar() {
             <div>
                 <p className="text-2xl text-blue-600 font-mono font-bold">bloggs</p>
             </div>
-            <div className="space-x-2 hidden sm:block">
+            <div className="space-x-3 hidden sm:block">
                 <Link href="/">
-                    <button className="hover:text-gray-400">Home</button>
+                    <button>
+                        <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png" alt="Home" width="20" height="20"/>
+                    </button>
                 </Link>
-                <Link href="/about-us">
-                    <button className="hover:text-gray-400">About Us</button>
-                </Link>
-                <Link href="/contact-us">
-                    <button className="hover:text-gray-400">Contact Us</button>
+                <Link href="/search">
+                    <button>
+                        <img src="https://img.icons8.com/ios-filled/50/ffffff/search--v1.png" alt="Search" width="20" height="20"></img>
+                    </button>
                 </Link>
             </div>
             <div>

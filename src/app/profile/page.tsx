@@ -45,18 +45,19 @@ export default function Profile(){
 
 
     return(
-        <div className="">
-            <div className="mx-auto h-screen w-4/5 border border-white/0 rounded-xl bg-slate-800">
+        <div className="p-2">
+            <div className="mx-auto relative h-screen w-3/5 border border-white/0 rounded-xl bg-slate-800">
                 <div 
-                className="w-full relative h-[300px] bg-cover bg-repeat bg-center border border-white/0 rounded-t-xl"
+                className="w-full h-[300px] bg-cover bg-repeat bg-center border border-white/0 rounded-t-xl"
                 style = {{backgroundImage: "url('https://images.pexels.com/photos/547114/pexels-photo-547114.jpeg')"}}
                 >    
                 </div>
                 <div className="m-0 w-[180px] h-[180px] border rounded-full bg-indigo-500 relative top-[-50px] left-[30px]"></div>
-                <div className="m-0 w-[150px] h-[50px] absolute top-[320px] right-[80px]">
+                <div className="m-0 w-[150px] h-[50px] absolute top-[320px] left-3/4">
                     <Link href='/writeUp'>
                         <button 
-                        className="border px-4 mt-1 rounded-lg">+NEW BLOG</button>   
+                        
+                        className="border px-4 mt-1 rounded-lg text-2xl bg-black/50">+</button>   
                     </Link>
                 </div>
                 <div className="px-3 pb-4 w-full flex flex-col justify-center gap-3">
