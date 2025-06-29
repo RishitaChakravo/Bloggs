@@ -7,8 +7,8 @@ dbConnect()
 
 export default async function GET(request: NextRequest){
     try {
-        const reqBody = await request.json()
-        const {prompt} = reqBody
+        const { searchParams } = new URL(request.url);
+        const prompt = searchParams.get("query");
 
         if(!prompt) {
             return NextResponse.json({message:"No search material"}, {status:400})
