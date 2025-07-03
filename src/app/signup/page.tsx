@@ -9,6 +9,7 @@ export default function SignUp(){
     const [disabled, setDisable] = useState(true)
     const [loading, setLoading] = useState(false)
     const [data, setData] = useState({
+        name:"",
         username: "",
         email: "",
         password: ""
@@ -30,7 +31,7 @@ export default function SignUp(){
     }
 
     useEffect(() => {
-        if (data.username.length > 0 && data.email.length > 0 && data.password.length > 0) {
+        if (data.username.length > 0 && data.email.length > 0 && data.password.length > 0 && data.name.length > 0) {
             setDisable(false)        
         } else {
             setDisable(true)
@@ -40,6 +41,15 @@ export default function SignUp(){
         <div className="flex flex-col justify-center items-center min-h-screen">
             {!next && <div className="flex flex-col items-center justify-center border border-gray-400 p-5 rounded-xl">
                 <p>{loading ? "Procssing" : "SIGNUP"}</p>
+                <label htmlFor="name">Name</label>
+                <input
+                className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black bg-white"
+                id="name"
+                placeholder="name"
+                value={data.name}
+                onChange={(e) => {setData({...data, name: e.target.value})}}
+                type="text"
+                />
                 <label htmlFor="username">Username</label>
                 <input
                 className="p-2 border border-gray-300 rounded-lg mb-4 focus:outline-none focus:border-gray-600 text-black bg-white"

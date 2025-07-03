@@ -1,6 +1,10 @@
 import mongoose, {Schema} from 'mongoose'
 
 const userSchema = new Schema({
+    name: {
+        type: String,
+        requiredd: [true, 'Enter your name'],
+    },
     username: {
         type: String,
         required: [true, "username is required"],

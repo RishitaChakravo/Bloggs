@@ -9,10 +9,10 @@ dbConnect()
 export async function POST(request: NextRequest) {
     try {
         const reqBody:any = await request.json()
-        const {username, email, password} = await reqBody
+        const {name, username, email, password} = await reqBody
         
         if(
-            [username, email, password].some((field) => {field?.trim() === ""})
+            [name, username, email, password].some((field) => {field?.trim() === ""})
         ) {
             return NextResponse.json({error: "Enter All Credentials"}, {status: 400})
         }
@@ -39,6 +39,7 @@ export async function POST(request: NextRequest) {
            return NextResponse.json({})
         }
         const user = User.create({
+            name,
             username,
             email,
             password: hashedPassword,
