@@ -12,9 +12,21 @@ interface Blog {
   _id?: string; // optional, if you're using MongoDB _id
 }
 
+interface User {
+    name: string;
+    username: string;
+    followers: number;
+    following: number;
+}
+
 export default function Profile(){
     
-    const [user, setUser] = useState({})
+    const [user, setUser] = useState<User>({
+        name: "Unknown",
+        username: "Unknown",
+        followers: 0,
+        following: 0,
+    })
     const [blogs, setBlogs] = useState<Blog[]>([])
     useEffect(() => {
         const getProfile = async () => {
@@ -52,23 +64,24 @@ export default function Profile(){
                 style = {{backgroundImage: "url('https://images.pexels.com/photos/547114/pexels-photo-547114.jpeg')"}}
                 >    
                 </div>
-                <div className="m-0 w-[180px] h-[180px] border rounded-full bg-indigo-500 relative top-[-50px] left-[30px]"></div>
+                <img
+                src="https://images.pexels.com/photos/547114/pexels-photo-547114.jpeg" 
+                className="m-0 w-[180px] h-[180px] border rounded-full relative top-[-50px] left-[30px]"></img>
                 <div className="m-0 w-[150px] h-[50px] absolute top-[320px] left-3/4">
                     <Link href='/writeUp'>
-                        <button 
-                        
-                        className="border px-4 mt-1 rounded-lg text-2xl bg-black/50">+</button>   
+                        <button className="border px-4 mt-1 rounded-lg text-2xl bg-black/50">+</button>   
                     </Link>
                 </div>
-                <div className="px-3 pb-4 w-full flex flex-col justify-center gap-3">
-                    <p className="text-3xl font-bold">User Name</p>
+                <div className="px-3 pb-4 w-full flex flex-col {justify-center gap-3">
+                    <p className="text-3xl font-bold">{user.name}</p>
+                    <p className="text-xl font-bold">@{user.username}</p>
                     <div className="w-full flex justify-evenly">
                         <div>
-                        <p>0</p>
+                        <p>{user.followers}</p>
                         <p>followers</p>
                     </div>
                     <div>
-                        <p>0</p>
+                        <p>{user.following}</p>
                         <p>following</p>
                     </div>
                     </div>

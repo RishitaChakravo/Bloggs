@@ -1,4 +1,5 @@
 import axios from "axios";
+import Link from "next/link";
 
 interface User {
     name: string;
@@ -19,21 +20,25 @@ export default function UserCard({user}: Props){
         }
     }
     return(
-        <div className="flex justify-between items-center w-4/5 md:w-2/5 h-auto px-7 py-2 rounded-xl border my-2 mx-auto bg-slate-800">
-            <img src='https://images.pexels.com/photos/31098335/pexels-photo-31098335.jpeg'
-            className="w-14 h-14 rounded-full"></img>
-            {/* src={user.profileImage}
-            alt={user.name} */}
-            <div>
-                <p className="text-base font-bold">{user.name}</p>
-                <p className="text-sm font-thin">@{user.username}</p>
-                <p className="text-sm font-thin">{user.followers}</p>
+        <Link href='/profile/unknown' 
+        // {href={`/profile/${user.username}`}}
+        >
+            <div className="flex justify-between items-center w-4/5 md:w-2/5 h-auto px-7 py-2 rounded-xl my-2 mx-auto bg-slate-800">
+                <img src='https://images.pexels.com/photos/31098335/pexels-photo-31098335.jpeg'
+                className="w-14 h-14 rounded-full"></img>
+                {/* src={user.profileImage}
+                alt={user.name} */}
+                <div>
+                    <p className="text-base font-bold">{user.name}</p>
+                    <p className="text-sm font-thin">@{user.username}</p>
+                    <p className="text-sm font-thin">{user.followers}</p>
+                </div>
+                <button
+                onClick={followButton} 
+                className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full">
+                    Follow
+                </button>
             </div>
-            <button
-            onClick={followButton} 
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded-full">
-                Follow
-            </button>
-        </div>
+        </Link>
     )
 }

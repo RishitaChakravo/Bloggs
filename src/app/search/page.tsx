@@ -5,7 +5,7 @@ import { useEffect, useState } from "react"
 import UserCard from "../components/UserCard"
 import BlogCard from "../components/BlogCard";
 
-interface User {
+export interface User {
     name: string;
     username: string;
     profileImage: string;
@@ -15,12 +15,19 @@ interface User {
 interface Blog {
     content: string;
     title: string;
+    author: User;
+    tags: [string]
 }
 
 export default function Search() {
     const [prompt, setprompt] = useState("")
     const [blogs, setBlogs] = useState<Blog[]>([])
-    const [users, setUsers] = useState<User[]>([])
+    const [users, setUsers] = useState<User[]>([{
+        name: "Unknown",
+        username: "Unkown",
+        followers: 0,
+        profileImage: ''
+    }])
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
@@ -74,15 +81,23 @@ export default function Search() {
                                 </li>))}
                             </ul>
                         </div>
-                        <div>
-                            <ul>
-                                {blogs.map((blog, index) => (<li key={index}>
-                                    <BlogCard blog={{
-                                        content: blog.content || "Empty",
-                                        title: blog.title || "",
-                                    }} />
-                                </li>))}
-                            </ul>
+                        <div className="flex flex-wrap gap-4 w-[90%] mx-auto p-2">
+                            {blogs.map((blog, index) => (
+                                <BlogCard
+                                key={index}
+                                blog={{
+                                    author: {
+                                    name: blog.author?.name || "Unknown",
+                                    username: blog.author?.username || "anonymous",
+                                    profileImage: blog.author?.profileImage || "/default-profile.png",
+                                    followers: blog.author?.followers || 0
+                                    },
+                                    content: blog.content || "Empty",
+                                    title: blog.title || "",
+                                    tags: blog.tags
+                                }}
+                                />
+                            ))}
                         </div>
                     </div>
                 )}
