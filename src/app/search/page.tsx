@@ -21,7 +21,17 @@ interface Blog {
 
 export default function Search() {
     const [prompt, setprompt] = useState("")
-    const [blogs, setBlogs] = useState<Blog[]>([])
+    const [blogs, setBlogs] = useState<Blog[]>([{
+        author: {
+            name: "Unknown",
+            username: "Unkown",
+            followers: 0,
+            profileImage: ''
+        },
+        title: "Unknown",
+        content: "Unknown",
+        tags: ["Unknown"]
+    }])
     const [users, setUsers] = useState<User[]>([{
         name: "Unknown",
         username: "Unkown",

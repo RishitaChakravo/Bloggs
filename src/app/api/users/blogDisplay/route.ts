@@ -7,19 +7,33 @@ import { NextRequest, NextResponse } from "next/server";
 
 dbConnect()
 
-export async function GET(request: NextRequest) {
+export async function GET(request: NextRequest, {params}: {params: {username: string}}) {
     try {
-        const token = request.cookies.get('token')?.value
-        const userId = await getDataFromToken(token!)
-        const user = await User.findById(userId)
-        if(!user) {
-            NextResponse.json({message: "Error"}, {status: 500})
+        const {searchParams} = new URL(request.url)
+        const username = searchParams.get("username")
+        
+        let userId
+
+        if (!username) {
+            const token = request.cookies.get("token")?.value;
+            if (!token) {
+                return NextResponse.json({ message: "Unauthorized" }, { status: 401 });
+            }
+            userId = await getDataFromToken(token);
+        
+        } else {
+            
+            const user = await User.findOne({ username });
+            if (!user) {
+                return NextResponse.json({ message: "User not found" }, { status: 404 });
+            }
+            userId = user._id;
         }
 
-        const blogs = Blog.aggregate([
+        const blogs = await Blog.aggregate([
             {
                $match: {
-                author: new mongoose.Types.ObjectId(userId!)
+                author: mongoose.Types.ObjectId.createFromHexString(userId!)
                } 
             },
             {
@@ -36,6 +50,7 @@ export async function GET(request: NextRequest) {
             {
                 $addFields: {
                     author: {
+                        name: "$authorDetails.name",
                         username: "$authorDetails.username",
                         email: "$authorDetails.email"
                     }
@@ -54,6 +69,6 @@ export async function GET(request: NextRequest) {
             data: blogs
         }, {status: 200})
     } catch (error: any) {
-        NextResponse.json({message: "error"}, {status: 500})       
+        return NextResponse.json({message: "error"}, {status: 500})       
     }
 }

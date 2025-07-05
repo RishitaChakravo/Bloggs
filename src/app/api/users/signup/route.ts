@@ -3,13 +3,21 @@ import User from '@/models/userModel'
 import bcrypt from "bcryptjs";
 import { uploadCloudinary } from "@/helpers/cloudinary";
 import { dbConnect } from "@/dbConfig/dbConnect";
+import { parseForm } from "@/lib/parseForm";
 
 dbConnect()
 
+export const config = {
+  api: {
+    bodyParser: false
+  }
+};
+
 export async function POST(request: NextRequest) {
     try {
-        const reqBody:any = await request.json()
-        const {name, username, email, password} = await reqBody
+        const {fields, files} = await parseForm(request)
+ 
+        const {name, username, email, password} = fields
         
         if(
             [name, username, email, password].some((field) => {field?.trim() === ""})
@@ -19,7 +27,7 @@ export async function POST(request: NextRequest) {
 
         const hashedPassword = await bcrypt.hash(password, 10)
 
-       const profileImageLocalPath = reqBody.file?.profileImage[0]?.path
+       const profileImageLocalPath = files.profileImage?.[0]?.filepath
         if(!profileImageLocalPath){
             return NextResponse.json({error: "Profile Image is required"}, {status: 400})
         }
@@ -29,7 +37,7 @@ export async function POST(request: NextRequest) {
            return NextResponse.json({error: ""}, {status: 400})
         }
 
-        const coverImageLocalPath = reqBody.file?.coverImage[0]?.path
+        const coverImageLocalPath = files?.coverImage?.[0]?.filepath;
         if(!coverImageLocalPath){
             return NextResponse.json({})
         }
@@ -43,8 +51,8 @@ export async function POST(request: NextRequest) {
             username,
             email,
             password: hashedPassword,
-            profileImage: profileImage.url,
-            coverImage: coverImage.url
+            profileImage: profileImage?.url,
+            coverImage: coverImage?.url
         })
         //verification email
         return NextResponse.json({
