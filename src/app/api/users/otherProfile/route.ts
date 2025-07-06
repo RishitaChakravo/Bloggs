@@ -4,7 +4,7 @@ import { NextRequest, NextResponse } from "next/server";
 
 dbConnect()
 
-export default async function GET(request: NextRequest, {params} : {params : {username : string}}){
+export async function GET(request: NextRequest, {params} : {params : {username : string}}){
     try {
         const {username} = params
         if(!username) {
