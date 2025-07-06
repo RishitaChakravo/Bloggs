@@ -13,6 +13,7 @@ export interface User {
 }
 
 interface Blog {
+    _id: string;
     content: string;
     title: string;
     author: User;
@@ -22,6 +23,7 @@ interface Blog {
 export default function Search() {
     const [prompt, setprompt] = useState("")
     const [blogs, setBlogs] = useState<Blog[]>([{
+        _id: "Unknown",
         author: {
             name: "Unknown",
             username: "Unkown",
@@ -96,6 +98,7 @@ export default function Search() {
                                 <BlogCard
                                 key={index}
                                 blog={{
+                                    _id: "",
                                     author: {
                                     name: blog.author?.name || "Unknown",
                                     username: blog.author?.username || "anonymous",
