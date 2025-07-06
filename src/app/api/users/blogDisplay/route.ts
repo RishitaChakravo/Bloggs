@@ -60,6 +60,11 @@ export async function GET(request: NextRequest, {params}: {params: {username: st
                 $project: {
                     authorDetails: 0,
                 }
+            },
+            {
+                $sort: {
+                    createdAt: -1
+                }
             }
         ])
 

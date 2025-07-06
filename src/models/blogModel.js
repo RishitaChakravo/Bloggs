@@ -14,7 +14,8 @@ const blogSchema = new Schema({
         ref: "User"
     },
     likes: {
-        type: Number
+        type: Number,
+        default: 0
     },
     tags: [String]
 },{timestamps: true})

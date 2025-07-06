@@ -20,7 +20,7 @@ export default function UserCard({user}: Props){
         }
     }
     return(
-        <Link href='/profile/unknown' 
+        <Link href={`/profile/${user.username}`} 
         // {href={`/profile/${user.username}`}}
         >
             <div className="flex justify-between items-center w-4/5 md:w-2/5 h-auto px-7 py-2 rounded-xl my-2 mx-auto bg-slate-800">
