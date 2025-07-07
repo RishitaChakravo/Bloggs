@@ -14,20 +14,73 @@ export async function GET(request: NextRequest){
             return NextResponse.json({message:"No search material"}, {status:400})
         }
 
-        const blogs =await Blog.find([
+        const blogs = await Blog.aggregate([
             {
-                $or:[
-                    {author: new RegExp(prompt, 'i')},
-                    {title: new RegExp(prompt, 'i')},
-                    {content: new RegExp(prompt, 'i')},
-                    {tags: {$in: [new RegExp(prompt, 'i')]}}
-                ]
+                $lookup: {
+                    from: "users",
+                    localField: "author",
+                    foreignField: "_id",
+                    as: "author",
+                }
+            },
+            { $unwind : "$author" },
+            {
+                $match: {
+                    $or:[
+                        {title: new RegExp(prompt, 'i')},
+                        {content: new RegExp(prompt, 'i')},
+                        {tags: {$in: [new RegExp(prompt, 'i')]}},
+                        {"author.username" : new RegExp(prompt, 'i')},
+                        {"author.name" : new RegExp(prompt, 'i')}
+                    ]
+                }
+            },
+            {
+                $project: {
+                    _id: 1,
+                    title: 1, 
+                    content: 1,
+                    author: {
+                        username: 1,
+                        name: 1,
+                        profileImage: 1,
+                    },
+                    tags: 1
+                }
             }
         ])
-        
-        const users =await User.find({
-            username: new RegExp(prompt, 'i')
-        })
+
+        const users = await User.aggregate([
+            {
+                $match: {
+                    $or: [
+                        {name: new RegExp(prompt, 'i')},
+                        {username: new RegExp(prompt, 'i')}
+                    ]
+                }
+            },
+            {
+                $lookup: {
+                    from :"follows",
+                    localField: "_id",
+                    foreignField: "following",
+                    as: "all_followers"
+                }
+            },
+            {
+                $addFields: {
+                followers: { $size: "$all_followers" }
+                }
+            },
+            {
+                $project: {
+                    name: 1,
+                    username: 1,
+                    profileImage: 1,
+                    followers: 1
+                }
+            }
+        ])
 
         return NextResponse.json({
             message:"Search succesful",

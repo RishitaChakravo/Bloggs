@@ -12,34 +12,24 @@ export interface User {
     followers: number;
 }
 
-interface Blog {
+export interface BlogUser {
+    name: string;
+    username: string;
+    profileImage: string;
+}
+
+export interface Blog {
     _id: string;
     content: string;
     title: string;
-    author: User;
+    author: BlogUser;
     tags: [string]
 }
 
 export default function Search() {
     const [prompt, setprompt] = useState("")
-    const [blogs, setBlogs] = useState<Blog[]>([{
-        _id: "Unknown",
-        author: {
-            name: "Unknown",
-            username: "Unkown",
-            followers: 0,
-            profileImage: ''
-        },
-        title: "Unknown",
-        content: "Unknown",
-        tags: ["Unknown"]
-    }])
-    const [users, setUsers] = useState<User[]>([{
-        name: "Unknown",
-        username: "Unkown",
-        followers: 0,
-        profileImage: ''
-    }])
+    const [blogs, setBlogs] = useState<Blog[]>([])
+    const [users, setUsers] = useState<User[]>([])
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
@@ -102,8 +92,7 @@ export default function Search() {
                                     author: {
                                     name: blog.author?.name || "Unknown",
                                     username: blog.author?.username || "anonymous",
-                                    profileImage: blog.author?.profileImage || "/default-profile.png",
-                                    followers: blog.author?.followers || 0
+                                    profileImage: blog.author?.profileImage || "/default-profile.png"
                                     },
                                     content: blog.content || "Empty",
                                     title: blog.title || "",
