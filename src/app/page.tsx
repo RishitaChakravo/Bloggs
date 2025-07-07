@@ -15,21 +15,23 @@ export default function Home() {
     email: ""
   });
 
-  // useEffect(() => {
-  //   const userProfile = async () => {
-  //     try {
-  //       const response = await axios.get('/api/users/profile');
-  //       const data = response.data;
-  //       setUser({
-  //         ...data,
-  //         isLoggedIn: true
-  //       });
-  //     } catch (error) {
-  //       console.log("failed to fetch user data");
-  //     }
-  //   };
-  //   userProfile();
-  // }, []);
+  useEffect(() => {
+    const userProfile = async () => {
+      try {
+        const response = await axios.get('/api/users/profile',{
+          withCredentials: true 
+        });
+        const data = response.data;
+        setUser({
+          ...data,
+          isLoggedIn: true
+        });
+      } catch (error) {
+        console.log("failed to fetch user data");
+      }
+    };
+    userProfile();
+  }, []);
 
   return (
     <div className="p-0 m-0">

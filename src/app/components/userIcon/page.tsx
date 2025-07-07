@@ -8,13 +8,14 @@ export default function UserIcon() {
     const [hidden, setHidden] = useState(true)
     const [user, setUser] = useState({
         username: "",
-        email: ""
+        email: "",
+        profileImage: ""
     })
 
     const logout = async () => {
         try {
             const response = await axios.post('/api/users/logout')
-            console.log("Successfully logged out", response)
+            console.log("Successfully logged out", response.data)
         } catch (error: any) {
             console.error("Failed to logout", error)
         }
@@ -23,14 +24,15 @@ export default function UserIcon() {
     useEffect(() => {
         const getProfile = async () => {
         try {
-            const response = await axios.get('/api/users/profile')
-            setUser(response.data)
+            const response = await axios.get('/api/users/profile', {
+                withCredentials: true,
+            })
+            setUser(response.data.data)
         } catch (error: any) {
             console.log("User Data not fetched", error)
-        }
+        }}
 
         getProfile();
-    }
     }, [])
 
     return (
@@ -39,9 +41,9 @@ export default function UserIcon() {
                 {hidden && (
                 <button onClick={() => setHidden(false)}>
                     <img
-                    src="https://th.bing.com/th/id/OIP.7O4_GREtLbxqPdJCTmfatQHaHa?w=190&h=191&c=7&r=0&o=5&dpr=1.3&pid=1.7"
+                    src={user.profileImage || "https://th.bing.com/th/id/OIP.7O4_GREtLbxqPdJCTmfatQHaHa?w=190&h=191&c=7&r=0&o=5&dpr=1.3&pid=1.7"}
                     alt="User Icon"
-                    className="rounded-full w-14"
+                    className="rounded-full w-14 h-14 object-cover"
                     />
                 </button>
                 )}
@@ -55,8 +57,8 @@ export default function UserIcon() {
                     <div className="bg-blue-200/50 p-3 w-auto min-h-screen fixed top-0 right-0 z-[9999]">
                         <div className="flex flex-col items-center mb-2">
                             <button onClick={() => { setHidden(!hidden) }}>
-                                <img src="https://th.bing.com/th/id/OIP.7O4_GREtLbxqPdJCTmfatQHaHa?w=190&h=191&c=7&r=0&o=5&dpr=1.3&pid=1.7"
-                                    className="rounded-full w-14 mb-2"
+                                <img src={user.profileImage || "https://th.bing.com/th/id/OIP.7O4_GREtLbxqPdJCTmfatQHaHa?w=190&h=191&c=7&r=0&o=5&dpr=1.3&pid=1.7"}
+                                    className="rounded-full w-14 h-14 object-cover mb-2"
                                 >
                                 </img>
                             </button>
@@ -66,7 +68,7 @@ export default function UserIcon() {
                             <hr className="w-full" />
                         </div>
                         <ul className="mr-20">
-                            <li><Link href="">My Profile</Link></li>
+                            <li><Link href="/profile">My Profile</Link></li>
                             <li><button onClick={logout}>LOGOUT</button></li>
                         </ul>
                     </div></>

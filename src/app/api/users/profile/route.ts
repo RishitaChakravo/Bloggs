@@ -9,13 +9,15 @@ dbConnect()
 
 export async function GET(request : NextRequest){
     try {
-        const reqBody = await request.json()
         const token = request.cookies.get('token')?.value
         if(!token) {
             return NextResponse.json({error: "Inavlid Token"}, {status: 400})
         }
 
         const userId = await getDataFromToken(token)
+        if (!userId) {
+        return NextResponse.json({ error: "Invalid or expired token" }, { status: 401 });
+        }
         
         const user = await User.findById(userId)
 
@@ -90,6 +92,12 @@ export async function GET(request : NextRequest){
         }, {status: 200})
 
     } catch (error: any) {
-        console.error("Error while fetching user profile", error)
+        return NextResponse.json(
+        {
+            error: "Failed to fetch user profile",
+            success: false,
+        },
+        { status: 500 }
+        );
     }
 } 
