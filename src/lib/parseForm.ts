@@ -9,26 +9,47 @@ export async function parseForm(request: NextRequest): Promise<{
   const form = new IncomingForm({ keepExtensions: true, multiples: true });
 
   return new Promise((resolve, reject) => {
-    const chunks: Buffer[] = [];
+    const reader = request.body?.getReader();
+    const stream = new Readable({ read() {} });
 
-    const readable = new Readable({
-      read() {}
-    });
-
-    request.body?.getReader().read().then(function process({ done, value }): any {
-      if (done) {
-        readable.push(null);
-        return;
+    async function pump() {
+      while (true) {
+        const { done, value } = await reader!.read();
+        if (done) {
+          stream.push(null);
+          break;
+        }
+        stream.push(Buffer.from(value));
       }
-      chunks.push(Buffer.from(value));
-      readable.push(value);
-      return request.body!.getReader().read().then(process);
-    });
+    }
 
-    form.parse(readable as any, (err, fields, files) => {
-      if (err) reject(err);
-      else resolve({ fields: fields as any, files: files as any });
+    pump();
+
+    (stream as any).headers = Object.fromEntries(request.headers.entries());
+
+    form.parse(stream as any, (err, fields, files) => {
+      if (err) return reject(err);
+
+      const normalizedFields: Record<string, string> = {};
+
+      Object.entries(fields).forEach(([key, value]) => {
+        if (typeof value === "string") {
+          normalizedFields[key] = value;
+        } else if (Array.isArray(value)) {
+          normalizedFields[key] = value[0] ?? ""; // fallback
+        } else {
+          normalizedFields[key] = "";
+        }
+      });
+
+      resolve({
+        fields: normalizedFields,
+        files: files as Record<string, any>,
+      });
     });
   });
 }
+
+
+
 
