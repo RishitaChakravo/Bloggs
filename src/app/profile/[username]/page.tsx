@@ -29,7 +29,9 @@ export default function PublicProfilePage() {
 
     const fetchProfile = async () => {
       try {
-        const res = await axios.get(`/api/users/otherProfile?username=${username}`)
+        const res = await axios.get(`/api/users/otherProfile?username=${username}`, {
+          withCredentials: true,
+        })
         setUser(res.data.data)
       } catch (err) {
         console.error("Failed to fetch user", err)

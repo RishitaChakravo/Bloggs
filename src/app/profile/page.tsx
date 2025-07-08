@@ -36,7 +36,9 @@ export default function Profile() {
         const getProfile = async () => {
             try {
                 setLoading(true)
-                const response = await axios.get('/api/users/profile')
+                const response = await axios.get('/api/users/profile', {
+                    withCredentials: true,
+                })
                 setUser(response.data.data)
                 console.log("Profile fetched successfully")
                 toast.success("Profile fetched")
