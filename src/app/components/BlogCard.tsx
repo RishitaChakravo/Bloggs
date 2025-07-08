@@ -19,14 +19,20 @@ interface Props {
 }
 
 export default function BlogCard({blog}: Props) {
+    const limit = 100
+    const isLong = blog.content.length > 100
+    const [expanded, setExpanded] = useState(false)
     const [liked, setLiked] = useState(false)
 
+    const toggleExpand = () => {setExpanded(!expanded)}
     const onLike = async () => {
         try {
             const info = liked ? 'like' : 'unlike'
             const response = await axios.post('/api/users/blogLikes', {blogId: blog._id, info})
+            console.log(response.data.message)
         } catch (error: any) {
             console.log("Something went seriouslt wrong")
+            console.log(error.message)
         }
     }
     return(
@@ -56,7 +62,14 @@ export default function BlogCard({blog}: Props) {
                     className="text-sm text-white/50 font-thin"
                     >#{tag}</span>))}
                 </div>
-                <p className="text-sm text-white/80">{blog.content}</p>
+                <p className="text-sm text-white/80">
+                    {expanded || !isLong ? blog.content : `${blog.content.slice(0, limit)}...`}
+                    <button onClick={toggleExpand}
+                    className="text-blue-400 hover:underline ml-1"
+                    >
+                        {expanded ? "See less" : "See more"}
+                    </button>
+                </p>
             </div>
         </div>
     )
