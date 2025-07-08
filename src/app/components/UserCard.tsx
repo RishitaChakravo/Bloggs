@@ -13,7 +13,7 @@ interface Props {
     user: User;
 }
 export default function UserCard({ user }: Props) {
-    const [follow, setFollow] = useState(true)
+    const [follow, setFollow] = useState(false)
     const followButton = async () => {
         try {
             const response = await axios.get('/api/users/follow')
@@ -25,7 +25,7 @@ export default function UserCard({ user }: Props) {
     return (
         <div className="flex justify-between items-center w-4/5 md:w-2/5 h-auto px-7 py-2 rounded-xl my-2 mx-auto bg-slate-800">
             <Link href={`/profile/${user.username}`} >
-                <img src='https://images.pexels.com/photos/31098335/pexels-photo-31098335.jpeg'
+                <img src={user.profileImage}
                     className="w-14 h-14 rounded-full"></img>
                 {/* src={user.profileImage}
                     alt={user.name} */}

@@ -37,7 +37,7 @@ export default function Home() {
     <div className="p-0 m-0">
       <HeroSec />
       {user.isLoggedIn && <UserIcon />}
-      <NavBar />
+      <NavBar isLoggedIn={user.isLoggedIn || false}/>
       <InfiniteCards/>
       <Footer />
     </div>
