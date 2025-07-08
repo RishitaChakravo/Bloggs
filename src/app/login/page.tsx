@@ -2,27 +2,38 @@
 
 import axios from "axios"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 
 export default function Login(){
+    const router = useRouter()
     const [disabled, setDisable] = useState(true)
     const [loading, setLoading] = useState(false)
     const [userData, setUserData] = useState({
         email: "",
         password: ""
     })
+    const [message, setMessage] = useState()
+    const [success, setSuccess] = useState()
 
     const onLogin = async () => {
         if(!disabled) {
             setLoading(true)
         }
         try {
-            const response = await axios.post("/api/users/login", userData)
+            const response = await axios.post("/api/users/login", userData, {
+                withCredentials: true,
+            })
+            setMessage(response.data.message)
+            setSuccess(response.data.success)
             console.log("Logged In Successfully", response)
             toast.success("LoggedIn succesfully")
         } catch (error: any) {
             toast.error("Failed login process")
+        } finally {
+            setLoading(false)
+            router.push('/')
         }
     }
 
@@ -64,6 +75,7 @@ export default function Login(){
                 className="hover:text-gray-400" 
                 href="/signup"> SignUp</Link>
             </p>
+            <p className={success ? 'text-green-600' : 'text-red-600'}>{message}</p>
         </div>
     )
 }

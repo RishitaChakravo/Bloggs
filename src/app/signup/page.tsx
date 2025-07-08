@@ -2,10 +2,12 @@
 
 import axios from "axios"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 import { useEffect, useState } from "react"
 import {toast} from "react-hot-toast"
 
 export default function SignUp(){
+    const router = useRouter()
     const [profileImage, setProfileImage] = useState<File | null>(null)
     const [coverImage, setCoverImage] = useState<File | null>(null)
     const [disabled, setDisable] = useState(true)
@@ -48,6 +50,7 @@ export default function SignUp(){
             toast.error(error?.response?.data?.message || "Sign up failed");
         } finally {
             setLoading(false)
+            router.push('/login')
         }
     }
 
