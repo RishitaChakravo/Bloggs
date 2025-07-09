@@ -33,6 +33,12 @@ export default function Search() {
     const [loading, setLoading] = useState(false)
 
     useEffect(() => {
+        if(!prompt.trim()) {
+            setBlogs([])
+            setUsers([])
+            return;
+        }
+        
         const searchResults = async () => {
             try {
                 setLoading(true)
@@ -49,7 +55,7 @@ export default function Search() {
             }
         }
 
-        // searchResults()
+        searchResults()
     }, [prompt])
     return (
         <div className="p-2 flex flex-col justify-center items-center">
