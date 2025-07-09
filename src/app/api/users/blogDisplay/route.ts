@@ -52,7 +52,8 @@ export async function GET(request: NextRequest, {params}: {params: {username: st
                     author: {
                         name: "$authorDetails.name",
                         username: "$authorDetails.username",
-                        email: "$authorDetails.email"
+                        email: "$authorDetails.email",
+                        profileImage: "$authorDetails.profileImage"
                     }
                 }
             },
@@ -71,7 +72,7 @@ export async function GET(request: NextRequest, {params}: {params: {username: st
         return NextResponse.json({
             message: "All blogs successfully fetched",
             success: true,
-            data: blogs
+            blogs
         }, {status: 200})
     } catch (error: any) {
         return NextResponse.json({message: "error"}, {status: 500})       
