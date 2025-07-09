@@ -5,11 +5,20 @@ import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import WriteUp from "../writeUp/page"
 import Link from "next/link"
+import BlogCard from "../components/BlogCard"
 
-interface Blog {
-    title: string;
+export interface Blog {
+    _id: string;
     content: string;
-    _id?: string; // optional, if you're using MongoDB _id
+    title: string;
+    author: BlogUser;
+    tags: [string]
+}
+
+export interface BlogUser {
+    name: string;
+    username: string;
+    profileImage: string;
 }
 
 interface User {
@@ -61,19 +70,19 @@ export default function Profile() {
             }
         }
         getProfile()
-        // getBlogDisplay()
+        getBlogDisplay()
     }, [])
 
 
     return (
         <div>
-            {loading ? 
-            <div className="h-screen w-screen flex flex-col gap-2 justify-center items-center">
-                <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full transition animate-spin"></div>
-                <div className="font-thin text-sm">Loading...</div>
-            </div> :
+            {loading ?
+                <div className="h-screen w-screen flex flex-col gap-2 justify-center items-center">
+                    <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full transition animate-spin"></div>
+                    <div className="font-thin text-sm">Loading...</div>
+                </div> :
                 <div className="p-2">
-                    <div className="mx-auto relative h-screen w-3/5 border border-white/0 rounded-xl bg-slate-800">
+                    <div className="mx-auto relative h-screen w-3/5 md:w-2/5 border border-white/0 rounded-xl bg-slate-800">
                         <div
                             className="w-full h-[300px] bg-cover bg-repeat bg-center border border-white/0 rounded-t-xl"
                             style={{ backgroundImage: `url(${user.coverImage || "https://images.pexels.com/photos/32356082/pexels-photo-32356082.jpeg"})` }}
@@ -92,18 +101,18 @@ export default function Profile() {
                             <p className="text-xl font-bold">@{user.username}</p>
                             <div className="w-full flex justify-evenly">
                                 <div>
-                                    <p>{user.followers || 0}</p>
+                                    <p>{user.followers}</p>
                                     <p>followers</p>
                                 </div>
                                 <div>
-                                    <p>{user.following || 0}</p>
+                                    <p>{user.following}</p>
                                     <p>following</p>
                                 </div>
                             </div>
                             <button className="border rounded-md cursor-pointer">follow</button>
                         </div>
                     </div>
-                    {blogs.length == 0 &&
+                    {Array.isArray(blogs) && blogs.length == 0 &&
                         <div className="text-center mt-2 ">
                             <p className="text-2xl font-sans font-extralight text-white/25">Write New Blogs</p>
                             <Link href='/writeUp'>
@@ -112,14 +121,14 @@ export default function Profile() {
                             </Link>
                         </div>
                     }
-                    {blogs.length > 0 &&
-                        <div className="mt-3 border w-4/5 mx-auto h-auto rounded-xl p-3">
-                            <ul>
-                                {blogs.map((blog, index) => (<li key={index}>
-                                    <p>{blog.title}</p>
-                                    <p>{blog.content}</p>
-                                </li>))}
-                            </ul>
+                    {Array.isArray(blogs) && blogs.length > 0 &&
+                        <div className="flex flex-wrap mt-3 border w-3/5 mx-auto h-auto rounded-xl p-3">
+                            {blogs.map((blog, index) => (
+                                <BlogCard
+                                    key={index}
+                                    blog={blog}
+                                />
+                            ))}
                         </div>
                     }
                 </div>
