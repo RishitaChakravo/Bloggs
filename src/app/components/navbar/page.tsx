@@ -2,10 +2,11 @@ import axios from "axios";
 import Link from "next/link";
 
 interface NavProp {
-    isLoggedIn: boolean;
+    isLoggedIn?: boolean;
+    showButton?: boolean
 }
 
-export function NavBar({isLoggedIn} : NavProp) {
+export function NavBar({isLoggedIn, showButton = true} : NavProp) {
     const logout = async() => {
         try {
             const response = await axios.post('/api/users/logout')
@@ -32,7 +33,7 @@ export function NavBar({isLoggedIn} : NavProp) {
                     </button>
                 </Link>
             </div>
-            <div>
+            {showButton && <div>
                 {isLoggedIn ? 
                 <button onClick={logout}
                 className="text-white-600 hidden sm:block border px-4 py-1 rounded-full hover:bg-red-600 hover:border-red-600 hover:text-white transition"
@@ -42,7 +43,7 @@ export function NavBar({isLoggedIn} : NavProp) {
                 <Link href="/signup">
                     <button className="text-blue-600 hidden sm:block border border-blue-600 px-4 py-1 rounded-full hover:bg-blue-600 hover:text-white transition">Sign Up</button>
                 </Link>}
-            </div>
+            </div>}
         </div>
     );
 }
