@@ -1,13 +1,14 @@
 import { dbConnect } from "@/dbConfig/dbConnect";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import Blog from "@/models/blogModel";
+import Like from "@/models/likeSchema";
 import User from "@/models/userModel";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 dbConnect()
 
-export async function GET(request: NextRequest, {params}: {params: {username: string}}) {
+export async function GET(request: NextRequest) {
     try {
         const {searchParams} = new URL(request.url)
         const username = searchParams.get("username")
@@ -33,7 +34,7 @@ export async function GET(request: NextRequest, {params}: {params: {username: st
         const blogs = await Blog.aggregate([
             {
                $match: {
-                author: mongoose.Types.ObjectId.createFromHexString(userId!)
+                author:new mongoose.Types.ObjectId(userId)
                } 
             },
             {
@@ -43,12 +44,41 @@ export async function GET(request: NextRequest, {params}: {params: {username: st
                     foreignField: "_id",
                     as: "authorDetails"
                 }
-            },
+            }, 
             {
                 $unwind: "$authorDetails"
             },
             {
+                $lookup: {
+                    from: "likes",
+                    localField: "_id",
+                    foreignField: "blogId",
+                    as: "likeDocs"
+                }
+            },
+            {
+                $lookup: {
+                    from: "likes",
+                    let: {blogId: "$_id"},
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $add: [
+                                        {$eq: ["$blogId", "$$blogId"]},
+                                        {$eq: ["$likedBy", new mongoose.Types.ObjectId(userId)]}
+                                    ]
+                                }
+                            } 
+                        }
+                    ],
+                    as: "userLike"
+                }
+            },
+            {
                 $addFields: {
+                    hasLiked: {$gt: [{$size: "$userLike"}, 0]},
+                    likes: {$size: "$likeDocs"},
                     author: {
                         name: "$authorDetails.name",
                         username: "$authorDetails.username",
@@ -75,6 +105,7 @@ export async function GET(request: NextRequest, {params}: {params: {username: st
             blogs
         }, {status: 200})
     } catch (error: any) {
+        console.error("API Error:", error);
         return NextResponse.json({message: "error"}, {status: 500})       
     }
 }
