@@ -4,11 +4,20 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import Link from "next/link"
+import BlogCard from "@/app/components/BlogCard"
 
-interface Blog {
-  title: string;
+export interface Blog {
+  _id: string;
   content: string;
-  _id?: string;
+  title: string;
+  author: BlogUser;
+  tags: [string]
+}
+
+export interface BlogUser {
+  name: string;
+  username: string;
+  profileImage: string;
 }
 
 interface User {
@@ -16,7 +25,8 @@ interface User {
   username: string;
   followers: number;
   following: number;
-  profileImage?: string;
+  coverImage: string;
+  profileImage: string;
 }
 
 export default function PublicProfilePage() {
@@ -56,10 +66,10 @@ export default function PublicProfilePage() {
   return (
     <div className="p-2">
       <div className="mx-auto relative h-screen w-3/5 border border-white/0 rounded-xl bg-slate-800">
-        <div 
+        <div
           className="w-full h-[300px] bg-cover bg-center border border-white/0 rounded-t-xl"
           style={{
-            backgroundImage: `url('https://images.pexels.com/photos/547114/pexels-photo-547114.jpeg')`,
+            backgroundImage: `url(${user.coverImage || 'https://images.pexels.com/photos/547114/pexels-photo-547114.jpeg'})`,
           }}
         />
         <img
@@ -90,15 +100,13 @@ export default function PublicProfilePage() {
           </p>
         </div>
       ) : (
-        <div className="mt-3 border w-4/5 mx-auto h-auto rounded-xl p-3">
-          <ul>
-            {blogs.map((blog, index) => (
-              <li key={index}>
-                <p className="text-xl font-bold">{blog.title}</p>
-                <p className="text-sm">{blog.content}</p>
-              </li>
-            ))}
-          </ul>
+        <div className="flex flex-wrap mt-3 border w-3/5 mx-auto h-auto rounded-xl p-3">
+          {blogs.map((blog, index) => (
+            <BlogCard
+              key={index}
+              blog={blog}
+            />
+          ))}
         </div>
       )}
     </div>

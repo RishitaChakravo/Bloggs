@@ -4,9 +4,10 @@ import { NextRequest, NextResponse } from "next/server";
 
 dbConnect()
 
-export async function GET(request: NextRequest, {params} : {params : {username : string}}){
+export async function GET(request: NextRequest){
     try {
-        const {username} = params
+        const {searchParams} = new URL(request.url)
+        const username = searchParams.get("username")
         if(!username) {
           return NextResponse.json({ error: "Username is required" }, {status: 400})
         }
@@ -22,6 +23,7 @@ export async function GET(request: NextRequest, {params} : {params : {username :
             data: user
         })
     } catch (error: any) {
+        console.error("❌ API Error:", error);
         return NextResponse.json({error: error},{status: 500})
     }
 }
