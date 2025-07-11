@@ -1,9 +1,12 @@
 "use client"
 
 import axios from "axios";
+import { useRouter } from "next/navigation";
 import { useState } from "react"
+import { NavBar } from "../components/navbar/page";
 
 export default function WriteUp() {
+    const router = useRouter()
     type UserData = {
         title: string,
         content: string;
@@ -31,6 +34,7 @@ export default function WriteUp() {
                 content: "",
                 tags: []
             })
+            router.push('/')
         }
     }
 
@@ -40,14 +44,17 @@ export default function WriteUp() {
 
     return (
         <div className="h-full w-full">
-            <div className="text-center mx-auto my-5 rounded-full w-1/2 h-auto top-0 z-50 bg-black border border-white/30">
+            {/* <div className="text-center mx-auto my-5 rounded-full w-1/2 h-auto top-0 z-50 bg-black border border-white/30">
                 <p className="text-2xl text-blue-600 font-mono font-bold">bloggs</p>
+            </div> */}
+            <div className="w-3/5 md:2/5 h-[100px]">
+                <NavBar showButton={false}/>
             </div>
             <div className="mx-auto my-10 w-[500px] flex flex-col justify-center items-center">
-                <div className="flex w-full justify-center items-center">
-                    <ul className="flex w-full mx-2 rounded-lg h-8 bg-neutral-700 px-2 text-white font-mono">
+                <div className="flex w-full min-h-8 h-auto justify-center items-center">
+                    <ul className="flex flex-wrap w-full mx-2 rounded-lg min-h-8 h-auto bg-neutral-700 px-2 text-white font-mono">
                         {Tags.map((Tag, index) => (
-                            <li key={index}>{Tag}|</li>
+                            <li key={index} className="mr-2 mb-1 px-2 py-1 bg-neutral-600 rounded">{Tag}|</li>
                         ))}
                     </ul>
                 </div>
@@ -75,7 +82,7 @@ export default function WriteUp() {
                 </div>
             </div>
             <div className="flex flex-col justify-center items-center h-screen">
-                <input placeholder="Title" value={userData.title} onChange={(e) => setUserData({ ...userData, title: e.target.value })} type="text" className="w-[500px] rounded-lg my-2 px-2 text-3xl text-gray-900 font-bold" />
+                <input placeholder="Title" value={userData.title} onChange={(e) => setUserData({ ...userData, title: e.target.value })} type="text" className="w-[500px] rounded-lg my-2 px-2 h-8 text-2xl text-gray-900 font-bold" />
                 <textarea placeholder="Content" className="font-thin text-lg mt-3 w-[500px] h-[500px] rounded-lg border hover:border-2 hover:border-blue-600 transition-all duration-200 ease-in-out
                 p-4
                 text-gray-700
