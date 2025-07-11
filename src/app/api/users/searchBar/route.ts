@@ -14,7 +14,7 @@ export async function GET(request: NextRequest){
             return NextResponse.json({message:"No search material"}, {status:400})
         }
 
-        const blogs = await Blog.aggregate([
+        const blogsRaw = await Blog.aggregate([
             {
                 $lookup: {
                     from: "users",
@@ -49,6 +49,15 @@ export async function GET(request: NextRequest){
                 }
             }
         ])
+
+        const blogs = blogsRaw.map(blog => {
+            console.log("Raw blog _id:", blog._id); // ⬅️ See what type it is
+
+            return {
+                ...blog,
+                _id: blog._id?.toString?.() || blog._id || "MISSING_ID" // safer cast
+            };
+        });
 
         const users = await User.aggregate([
             {

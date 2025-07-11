@@ -94,7 +94,7 @@ export default function Search() {
                                 <BlogCard
                                 key={index}
                                 blog={{
-                                    _id: "",
+                                    _id: blog._id || "",
                                     author: {
                                     name: blog.author?.name || "Unknown",
                                     username: blog.author?.username || "anonymous",
