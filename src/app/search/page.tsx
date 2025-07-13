@@ -23,7 +23,9 @@ export interface Blog {
     content: string;
     title: string;
     author: BlogUser;
-    tags: [string]
+    tags: string[];
+    hasLiked: boolean;
+    likes: number;
 }
 
 export default function Search() {
@@ -93,17 +95,7 @@ export default function Search() {
                             {blogs.map((blog, index) => (
                                 <BlogCard
                                 key={index}
-                                blog={{
-                                    _id: blog._id || "",
-                                    author: {
-                                    name: blog.author?.name || "Unknown",
-                                    username: blog.author?.username || "anonymous",
-                                    profileImage: blog.author?.profileImage || "/default-profile.png"
-                                    },
-                                    content: blog.content || "Empty",
-                                    title: blog.title || "",
-                                    tags: blog.tags
-                                }}
+                                blog={blog}
                                 />
                             ))}
                         </div>

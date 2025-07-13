@@ -2,11 +2,12 @@ import { NextRequest, NextResponse } from "next/server";
 import Like from '@/models/likeSchema'
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import Blog from "@/models/blogModel";
+import mongoose from "mongoose";
 
 export async function POST(request: NextRequest) {
     try {
         const { blogId } = await request.json()
-        if (!blogId) {
+        if (!blogId || !mongoose.Types.ObjectId.isValid(blogId)) {
             return NextResponse.json({ message: "BlogId not presentt" }, { status: 400 })
         }
 
@@ -20,7 +21,9 @@ export async function POST(request: NextRequest) {
             likedBy: userId,
             blogId
         })
-
+        if (existing) {
+            return NextResponse.json({ message: "Already liked" }, { status: 200 });
+        }
         if (!existing) {
             const newLike = await Like.create({
                 likedBy: userId,

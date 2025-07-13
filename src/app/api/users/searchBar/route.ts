@@ -1,6 +1,8 @@
 import { dbConnect } from "@/dbConfig/dbConnect";
+import { getDataFromToken } from "@/helpers/getDataFromToken";
 import Blog from "@/models/blogModel";
 import User from "@/models/userModel";
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 dbConnect()
@@ -9,12 +11,48 @@ export async function GET(request: NextRequest){
     try {
         const { searchParams } = new URL(request.url);
         const prompt = searchParams.get("query");
+        const token = request.cookies.get('token')?.value
+        if(!token) {
+            return NextResponse.json({})
+        }
+
+        const userId = await getDataFromToken(token)
+        if(!userId){
+            return NextResponse.json({})
+        }
 
         if(!prompt) {
             return NextResponse.json({message:"No search material"}, {status:400})
         }
 
         const blogsRaw = await Blog.aggregate([
+            {
+                $lookup: {
+                    from: "likes",
+                    localField: "_id",
+                    foreignField: "blogId",
+                    as: "likesDocs"
+                }
+            },
+            {
+                $lookup: {
+                    from: "likes",
+                    let: {blogId: "$_id"},
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        {$eq: ["$blogId", "$$blogId"]},
+                                        {$eq: ["$likedBy", new mongoose.Types.ObjectId(userId)]}
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: "userLike"
+                }
+            },
             {
                 $lookup: {
                     from: "users",
@@ -36,6 +74,18 @@ export async function GET(request: NextRequest){
                 }
             },
             {
+                $addFields: {
+                    likes: {$size: "$likesDocs"},
+                    hasLiked: {
+                        $cond: {
+                            if: {$gt : [{$size: "$userLike"}, 0]},
+                            then: true,
+                            else: false
+                        }
+                    }
+                }
+            },
+            {
                 $project: {
                     _id: 1,
                     title: 1, 
@@ -45,7 +95,9 @@ export async function GET(request: NextRequest){
                         name: 1,
                         profileImage: 1,
                     },
-                    tags: 1
+                    tags: 1,
+                    likes: 1,
+                    hasLiked: 1
                 }
             }
         ])
