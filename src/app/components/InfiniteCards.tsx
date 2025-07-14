@@ -8,6 +8,7 @@ interface Blog {
     content: string;
     title: string;
     authorName: string;
+    username: string;
 }
 
 export function InfiniteCards() {
@@ -24,7 +25,7 @@ export function InfiniteCards() {
             }
         }
 
-        // popularBlogs()
+        popularBlogs()
     }, [])
 
     return (

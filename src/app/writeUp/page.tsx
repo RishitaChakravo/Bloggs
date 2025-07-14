@@ -22,7 +22,11 @@ export default function WriteUp() {
 
     async function blogSubmit() {
         try {
-            setUserData({ ...userData, tags: Tags })
+            const finalData: UserData = {
+                ...userData,
+                tags: Tags
+            }
+            
             const response = await axios.post("/api/users/blog", userData)
             console.log("Blog saved successfully", response)
         } catch (error) {

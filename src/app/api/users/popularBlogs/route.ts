@@ -25,7 +25,8 @@ export async function GET(request: NextRequest){
                 $project: {
                     content: 1,
                     title: 1,
-                    authorName: "$author.name"
+                    authorName: "$author.name",
+                    username: "$author.username"
                 }
             }
         ])
