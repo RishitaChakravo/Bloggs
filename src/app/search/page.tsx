@@ -4,6 +4,7 @@ import axios from "axios"
 import { useEffect, useState } from "react"
 import UserCard from "../components/UserCard"
 import BlogCard from "../components/BlogCard";
+import { Comment } from "../components/BlogCard2";
 
 export interface User {
     name: string;
@@ -26,6 +27,7 @@ export interface Blog {
     tags: string[];
     hasLiked: boolean;
     likes: number;
+    comments: Comment[]
 }
 
 export default function Search() {
