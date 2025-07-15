@@ -1,4 +1,5 @@
 import axios from "axios";
+import { BookText, FileText, Newspaper } from "lucide-react";
 import Link from "next/link";
 
 interface NavProp {
@@ -17,11 +18,11 @@ export function NavBar({isLoggedIn, showButton = true} : NavProp) {
     }
     return (
         <div className="fixed top-4 left-1/2 transform -translate-x-1/2 z-50 bg-black shadow-lg px-10 py-3 
-        text-center sm:flex items-center justify-between rounded-full w-[50%] max-w-5xl sm:w-[80%]">
+        text-center sm:flex items-center justify-between rounded-full w-[50%] max-w-5xl sm:w-[80%] md:w-[60%]">
             <div>
                 <p className="text-2xl text-blue-600 font-mono font-bold">bloggs</p>
             </div>
-            <div className="space-x-3 hidden sm:block">
+            <div className="flex w-auto gap-4">
                 <Link href="/">
                     <button>
                         <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png" alt="Home" width="20" height="20"/>
@@ -31,6 +32,9 @@ export function NavBar({isLoggedIn, showButton = true} : NavProp) {
                     <button>
                         <img src="https://img.icons8.com/ios-filled/50/ffffff/search--v1.png" alt="Search" width="20" height="20"></img>
                     </button>
+                </Link>
+                <Link href='/blogPage'>
+                    <Newspaper className="w-5 h-5"/>
                 </Link>
             </div>
             {showButton && <div>
