@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Heart } from "lucide-react";
 import axios from "axios";
 import Link from "next/link";
+import { Comment } from "./BlogCard2";
 
 interface Blog {
     _id: string;
@@ -14,13 +15,14 @@ interface Blog {
     tags: string[];
     hasLiked: boolean;
     likes:number;
+    comments: Comment[]
 }
 
 interface Props {
     blog: Blog
 }
 
-export default function BlogCard({ blog }: Props) {
+export default function BlogCard({ blog}: Props) {
     const limit = 100
     const isLong = blog.content.length > 100
     const [expanded, setExpanded] = useState(false)
@@ -46,7 +48,7 @@ export default function BlogCard({ blog }: Props) {
         }
     }
     return (
-        <div className="h-auto w-[48%] md:w-[35%] p-1 rounded-xl border mx-auto bg-slate-800">
+        <div className="flex-1 min-w-[250px] max-w-[300px] p-1 rounded-xl border bg-slate-800">
             <div className="flex justify-between px-1">
                 <Link href={`/profile/${blog.author.username}`} className="flex w-full">
                     <img

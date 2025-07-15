@@ -6,97 +6,121 @@ import { useState } from "react"
 import { NavBar } from "../components/navbar/page";
 
 export default function WriteUp() {
-    const router = useRouter()
+    const router = useRouter();
+
     type UserData = {
         title: string,
         content: string;
         tags: string[];
-    }
-    const [Tags, setTags] = useState<string[]>([])
-    const [tagPrompt, setTagPrompt] = useState<string>("")
+    };
+
+    const [Tags, setTags] = useState<string[]>([]);
+    const [tagPrompt, setTagPrompt] = useState<string>("");
     const [userData, setUserData] = useState<UserData>({
         title: "",
         content: "",
         tags: []
-    })
+    });
 
     async function blogSubmit() {
         try {
             const finalData: UserData = {
                 ...userData,
                 tags: Tags
-            }
-            
-            const response = await axios.post("/api/users/blog", userData)
-            console.log("Blog saved successfully", response)
+            };
+            const response = await axios.post("/api/users/blog", finalData);
+            console.log("Blog saved successfully", response);
         } catch (error) {
-            console.error("Failed to save the blog")
+            console.error("Failed to save the blog", error);
         } finally {
-            setTags([])
+            setTags([]);
             setUserData({
                 title: "",
                 content: "",
                 tags: []
-            })
-            router.push('/')
+            });
+            router.push('/');
         }
     }
 
     const removeTag = () => {
-        setTags(prevTags => prevTags.slice(0, -1))
-    }
+        setTags(prevTags => prevTags.slice(0, -1));
+    };
 
     return (
-        <div className="h-full w-full">
-            {/* <div className="text-center mx-auto my-5 rounded-full w-1/2 h-auto top-0 z-50 bg-black border border-white/30">
-                <p className="text-2xl text-blue-600 font-mono font-bold">bloggs</p>
-            </div> */}
-            <div className="w-3/5 md:2/5 h-[100px]">
-                <NavBar showButton={false}/>
-            </div>
-            <div className="mx-auto my-10 w-[500px] flex flex-col justify-center items-center">
-                <div className="flex w-full min-h-8 h-auto justify-center items-center">
-                    <ul className="flex flex-wrap w-full mx-2 rounded-lg min-h-8 h-auto bg-neutral-700 px-2 text-white font-mono">
-                        {Tags.map((Tag, index) => (
-                            <li key={index} className="mr-2 mb-1 px-2 py-1 bg-neutral-600 rounded">{Tag}|</li>
-                        ))}
-                    </ul>
-                </div>
-                <label htmlFor="tagInput" className="sr-only">Enter a tag</label>
-                <input 
-                id="tagInput"
-                className="px-2 h-8 rounded-lg my-2 text-neutral-800"
-                placeholder="Tags"
-                type="text" 
-                value={tagPrompt} 
-                onChange={(e) => setTagPrompt(e.target.value)}
-                />
-                <div className="flex justify-center gap-2 my-2 w-full">
-                    <button
-                        className="w-10 h-10 text-2xl transition ease-out border py-1 rounded-full font-bold hover:bg-blue-500 hover:border-blue-500"
-                        onClick={() => {
-                            setTags([...Tags, tagPrompt])
-                            setTagPrompt("")
-                        }}>+
-                    </button>
-                    <button
-                        disabled={Tags.length === 0}
-                        onClick={removeTag}
-                        className={`w-10 h-10 rounded-full font-bold text-xl bg-red-600 focus:bg-black`}>x</button>
-                </div>
-            </div>
-            <div className="flex flex-col justify-center items-center h-screen">
-                <input placeholder="Title" value={userData.title} onChange={(e) => setUserData({ ...userData, title: e.target.value })} type="text" className="w-[500px] rounded-lg my-2 px-2 h-8 text-2xl text-gray-900 font-bold" />
-                <textarea placeholder="Content" className="font-thin text-lg mt-3 w-[500px] h-[500px] rounded-lg border hover:border-2 hover:border-blue-600 transition-all duration-200 ease-in-out
-                p-4
-                text-gray-700
-                hover:shadow-md focus:shadow-lg
-                bg-white placeholder-gray-400
-                focus:ring-4 focus:ring-blue-400 focus:ring-opacity-100
-                " value={userData.content} onChange={(e) => setUserData({ ...userData, content: e.target.value })}></textarea>
+        <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
+            <NavBar showButton={false}/>
+            <div className="flex flex-col items-center justify-center py-10 px-4 pt-32">
+                <div className="w-full max-w-2xl bg-white text-black rounded-xl shadow-xl p-8">
+                    <h1 className="text-3xl font-bold mb-6 text-center text-blue-700">Write a Blog</h1>
 
-                <button className="bg-white text-black hover:bg-gray-300 py-1 px-10 rounded-lg mt-2" onClick={blogSubmit}>SUBMIT</button>
+                    {/* Tag List */}
+                    <div className="flex flex-wrap gap-2 mb-4">
+                        {Tags.map((tag, index) => (
+                            <span key={index} className="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
+                                #{tag}
+                            </span>
+                        ))}
+                    </div>
+
+                    {/* Tag Input */}
+                    <div className="flex gap-2 mb-6">
+                        <input
+                            id="tagInput"
+                            className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            placeholder="Enter a tag"
+                            type="text"
+                            value={tagPrompt}
+                            onChange={(e) => setTagPrompt(e.target.value)}
+                        />
+                        <button
+                            className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded"
+                            onClick={() => {
+                                if (tagPrompt.trim() !== "") {
+                                    setTags([...Tags, tagPrompt.trim()]);
+                                    setTagPrompt("");
+                                }
+                            }}
+                        >
+                            Add
+                        </button>
+                        <button
+                            disabled={Tags.length === 0}
+                            onClick={removeTag}
+                            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded disabled:opacity-50"
+                        >
+                            Remove Last
+                        </button>
+                    </div>
+
+                    {/* Title Input */}
+                    <input
+                        placeholder="Blog Title"
+                        value={userData.title}
+                        onChange={(e) => setUserData({ ...userData, title: e.target.value })}
+                        type="text"
+                        className="w-full mb-4 px-4 py-2 rounded-md border border-gray-300 text-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    />
+
+                    {/* Content Textarea */}
+                    <textarea
+                        placeholder="Write your blog content here..."
+                        value={userData.content}
+                        onChange={(e) => setUserData({ ...userData, content: e.target.value })}
+                        className="w-full h-60 px-4 py-3 rounded-md border border-gray-300 resize-none text-base focus:outline-none focus:ring-2 focus:ring-blue-500"
+                    ></textarea>
+
+                    {/* Submit Button */}
+                    <div className="flex justify-center mt-6">
+                        <button
+                            className="bg-green-600 hover:bg-green-700 text-white px-8 py-2 rounded-md font-semibold transition"
+                            onClick={blogSubmit}
+                        >
+                            Submit Blog
+                        </button>
+                    </div>
+                </div>
             </div>
         </div>
-    )
+    );
 }
