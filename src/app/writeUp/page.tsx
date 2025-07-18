@@ -4,9 +4,10 @@ import axios from "axios";
 import { useRouter } from "next/navigation";
 import { useState } from "react"
 import { NavBar } from "../components/navbar/page";
+import toast from "react-hot-toast";
+import { Toaster } from "react-hot-toast";
 
 export default function WriteUp() {
-    const router = useRouter();
 
     type UserData = {
         title: string,
@@ -30,8 +31,10 @@ export default function WriteUp() {
             };
             const response = await axios.post("/api/users/blog", finalData);
             console.log("Blog saved successfully", response);
+            toast.success("Blog Posted Successfully!")
         } catch (error) {
             console.error("Failed to save the blog", error);
+            toast.error("Something Went Wrong!!")
         } finally {
             setTags([]);
             setUserData({
@@ -39,7 +42,6 @@ export default function WriteUp() {
                 content: "",
                 tags: []
             });
-            router.push('/');
         }
     }
 
@@ -121,6 +123,9 @@ export default function WriteUp() {
                     </div>
                 </div>
             </div>
+            <Toaster position="bottom-right"
+            toastOptions={{ style: { zIndex: 9999 } }}
+            />
         </div>
     );
 }
