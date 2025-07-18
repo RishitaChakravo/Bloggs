@@ -27,7 +27,8 @@ export interface Blog {
     tags: string[];
     hasLiked: boolean;
     likes: number;
-    comments: Comment[]
+    commentDocs: Comment[];
+    commentCount: number;
 }
 
 export default function Search() {

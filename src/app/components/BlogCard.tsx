@@ -15,7 +15,7 @@ interface Blog {
     tags: string[];
     hasLiked: boolean;
     likes:number;
-    comments: Comment[]
+    commentDocs: Comment[]
 }
 
 interface Props {
@@ -74,7 +74,7 @@ export default function BlogCard({ blog}: Props) {
             </div>
             <div className=" my-1 rounded-xl bg-slate-700 p-2 flex flex-col">
                 <p className="font-semibold">{blog.title}</p>
-                <div>
+                <div className="h-auto flex flex-wrap">
                     {blog.tags.map((tag, index) => (<span key={index}
                         className="text-sm text-white/50 font-thin"
                     >#{tag}</span>))}
