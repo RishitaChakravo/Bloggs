@@ -135,6 +135,7 @@ export async function GET(request: NextRequest){
             },
             {
                 $project: {
+                    _id: 1,
                     name: 1,
                     username: 1,
                     profileImage: 1,
