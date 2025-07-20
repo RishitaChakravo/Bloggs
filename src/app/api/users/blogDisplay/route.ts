@@ -64,7 +64,7 @@ export async function GET(request: NextRequest) {
                         {
                             $match: {
                                 $expr: {
-                                    $add: [
+                                    $and: [
                                         {$eq: ["$blogId", "$$blogId"]},
                                         {$eq: ["$likedBy", new mongoose.Types.ObjectId(userId)]}
                                     ]
