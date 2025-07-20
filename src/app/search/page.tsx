@@ -53,7 +53,6 @@ export default function Search() {
                 })
                 setBlogs(response.data.blogs)
                 setUsers(response.data.users)
-                console.log("Fetched search results", response.data.blogs, response.data.users)
             } catch (error: any) {
                 console.error("Search failed", error)
             } finally {
