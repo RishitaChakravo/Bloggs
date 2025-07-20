@@ -6,7 +6,7 @@ import { dbConnect } from "@/dbConfig/dbConnect";
 
 dbConnect()
 
-export async function FollowFunc(request: NextRequest){
+export async function POST(request: NextRequest){
     try {
         const reqBody = await request.json()
         const {followingId} = reqBody

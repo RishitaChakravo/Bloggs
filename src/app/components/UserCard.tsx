@@ -3,6 +3,7 @@ import Link from "next/link";
 import { useState } from "react";
 
 interface User {
+    _id: string;
     name: string;
     username: string;
     profileImage: string;
@@ -16,7 +17,7 @@ export default function UserCard({ user }: Props) {
     const [follow, setFollow] = useState(false)
     const followButton = async () => {
         try {
-            const response = await axios.get('/api/users/follow')
+            const response = await axios.post('/api/users/follow', {followingId: user._id})
             console.log("Follow request sent successfully", response.data);
         } catch (error: any) {
             console.log(error.message)

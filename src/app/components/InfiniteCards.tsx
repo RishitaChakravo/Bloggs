@@ -19,6 +19,7 @@ export function InfiniteCards() {
             try {
                 const response = await axios.get('/api/users/popularBlogs')
                 setBlogs(response.data.blogs)
+                console.log(response.data.blogs)
                 console.log(response.data.message)
             } catch (error: any) {
                 console.error(error.message)
@@ -33,7 +34,7 @@ export function InfiniteCards() {
       <InfiniteMovingCards
         items={blogs}
         direction="right"
-        speed="slow"
+        speed="fast"
       />
     </div>
   );
