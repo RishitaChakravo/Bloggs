@@ -3,15 +3,19 @@
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
-import Link from "next/link"
 import BlogCard from "@/app/components/BlogCard"
+import { Comment } from "@/app/components/BlogCard2"
+import toast from "react-hot-toast"
 
 export interface Blog {
   _id: string;
   content: string;
   title: string;
   author: BlogUser;
-  tags: [string]
+  tags: string[];
+  hasLiked: boolean;
+  likes: number;
+  commentDocs: Comment[]
 }
 
 export interface BlogUser {
@@ -21,6 +25,7 @@ export interface BlogUser {
 }
 
 interface User {
+  _id: string;
   name: string;
   username: string;
   followers: number;
@@ -61,54 +66,69 @@ export default function PublicProfilePage() {
     fetchBlogs()
   }, [username])
 
-  if (!user) return <p className="text-center mt-10">Loading profile...</p>
+  if (!user) return <p className="text-center mt-10 text-lg text-white/60">Loading profile...</p>
+
+  const follow = async () => {
+    try {
+      const response = await axios.post('/api/users/follow', {followingId: user._id})
+      toast.success(`You followed ${user.name}`)
+    } catch (error: any) {
+      toast.error(error.response?.data?.error || "Could not follow user")
+    }
+  }
 
   return (
-    <div className="p-2">
-      <div className="mx-auto relative h-screen w-3/5 border border-white/0 rounded-xl bg-slate-800">
+    <div className="p-4 bg-neutral-900 min-h-screen text-white">
+      <div className="mx-auto max-w-3xl border rounded-xl bg-slate-800 shadow-md overflow-hidden">
         <div
-          className="w-full h-[300px] bg-cover bg-center border border-white/0 rounded-t-xl"
+          className="w-full h-[250px] bg-cover bg-center"
           style={{
             backgroundImage: `url(${user.coverImage || 'https://images.pexels.com/photos/547114/pexels-photo-547114.jpeg'})`,
           }}
         />
-        <img
-          src={user.profileImage || "https://images.pexels.com/photos/547114/pexels-photo-547114.jpeg"}
-          className="m-0 w-[180px] h-[180px] border rounded-full relative top-[-50px] left-[30px]"
-        />
-        <div className="px-3 pb-4 w-full flex flex-col justify-center gap-3">
-          <p className="text-3xl font-bold">{user.name}</p>
-          <p className="text-xl font-bold">@{user.username}</p>
-          <div className="w-full flex justify-evenly">
-            <div>
-              <p>{user.followers}</p>
-              <p>followers</p>
-            </div>
-            <div>
-              <p>{user.following}</p>
-              <p>following</p>
+        <div className="relative px-6 pb-6 pt-4">
+          <img
+            src={user.profileImage || "https://images.pexels.com/photos/547114/pexels-photo-547114.jpeg"}
+            alt="Profile"
+            className="w-[120px] h-[120px] border-4 border-white rounded-full absolute -top-[60px] left-6 object-cover"
+          />
+          <div className="ml-[140px]">
+            <h2 className="text-2xl font-bold">{user.name}</h2>
+            <p className="text-white/60">@{user.username}</p>
+            <div className="flex items-center gap-6 mt-3">
+              <div className="text-center">
+                <p className="text-lg font-semibold">{user.followers > 0 ? user.followers : '0'}</p>
+                <p className="text-sm text-white/50">Followers</p>
+              </div>
+              <div className="text-center">
+                <p className="text-lg font-semibold">{user.following > 0 ? user.following : '0'}</p>
+                <p className="text-sm text-white/50">Following</p>
+              </div>
+              <button
+                onClick={follow}
+                className="ml-auto px-4 py-1.5 bg-blue-600 hover:bg-blue-700 transition rounded-md text-sm font-medium"
+              >
+                Follow
+              </button>
             </div>
           </div>
-          <button className="border rounded-md cursor-pointer">Follow</button>
         </div>
       </div>
 
-      {blogs.length === 0 ? (
-        <div className="text-center mt-2">
-          <p className="text-2xl font-sans font-extralight text-white/25">
-            This user hasn't written any blogs yet.
-          </p>
-        </div>
-      ) : (
-        <div className="flex flex-wrap mt-3 border w-3/5 mx-auto h-auto rounded-xl p-3">
-          {blogs.map((blog, index) => (
-            <BlogCard
-              key={index}
-              blog={blog}
-            />
-          ))}
-        </div>
-      )}
+      <div className="max-w-3xl mx-auto mt-6">
+        {blogs.length === 0 ? (
+          <div className="text-center py-10">
+            <p className="text-xl text-white/40">This user hasn't written any blogs yet.</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {blogs.map((blog, index) => (
+              <BlogCard key={index} blog={blog} />
+            ))}
+          </div>
+        )}
+      </div>
     </div>
   )
 }
+

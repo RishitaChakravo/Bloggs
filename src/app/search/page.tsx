@@ -7,6 +7,7 @@ import BlogCard from "../components/BlogCard";
 import { Comment } from "../components/BlogCard2";
 
 export interface User {
+    _id: string;
     name: string;
     username: string;
     profileImage: string;
@@ -85,12 +86,7 @@ export default function Search() {
                         <div>
                             <ul>
                                 {users.map((user, index) => (<li key={index}>
-                                    <UserCard user={{
-                                        name: user.name || "Unknown",
-                                        username: user.username || "anonymous",
-                                        profileImage: user.profileImage || "/default-profile.png",
-                                        followers: user.followers || 0
-                                    }} />
+                                    <UserCard user={user} />
                                 </li>))}
                             </ul>
                         </div>
