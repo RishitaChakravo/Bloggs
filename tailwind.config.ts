@@ -1,6 +1,6 @@
 import type { Config } from "tailwindcss";
 
-export default {
+const config: Config = {
   content: [
     "./src/pages/**/*.{js,ts,jsx,tsx,mdx}",
     "./src/components/**/*.{js,ts,jsx,tsx,mdx}",
@@ -12,7 +12,19 @@ export default {
         background: "var(--background)",
         foreground: "var(--foreground)",
       },
+      keyframes: {
+        scroll: {
+          to: {
+            transform: "translateX(calc(-50% - 0.5rem))",
+          },
+        },
+      },
+      animation: {
+        scroll: "scroll 40s linear infinite",
+      },
     },
   },
   plugins: [],
-} satisfies Config;
+};
+
+export default config;
