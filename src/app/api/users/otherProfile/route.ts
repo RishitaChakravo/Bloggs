@@ -1,5 +1,6 @@
 import { dbConnect } from "@/dbConfig/dbConnect";
 import User from "@/models/userModel";
+import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 dbConnect()
@@ -18,9 +19,47 @@ export async function GET(request: NextRequest){
             return NextResponse.json({ error: "User not found" }, { status: 404 });
         }
 
+        const userId = user._id
+
+        const updatedUser = await User.aggregate([
+            {
+                $match: {
+                    _id: new mongoose.Types.ObjectId(userId)
+                }
+            },
+            {
+                $lookup: {
+                    from: 'follows',
+                    localField: '_id',
+                    foreignField: 'following',
+                    as: 'followersList'
+                }
+            },
+            {
+                $lookup: {
+                    from: 'follows',
+                    localField: '_id',
+                    foreignField: 'follower',
+                    as: 'isFollowingList'
+                }
+            },
+            {
+                $addFields: {
+                    followers: {$size: '$followersList'},
+                    following: {$size: '$isFollowingList'}
+                }
+            },
+            {
+                $project: {
+                    followersList: 0,
+                    isFollowingList: 0
+                }
+            }
+        ])
+
         return NextResponse.json({
             success: true, 
-            data: user
+            data: updatedUser[0]
         })
     } catch (error: any) {
         console.error("❌ API Error:", error);
