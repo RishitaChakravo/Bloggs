@@ -79,8 +79,8 @@ export async function GET(request : NextRequest){
             },
             {
                 $addFields: {
-                    followersCount: { $size: "$followers" },
-                    followingCount: { $size: "$isFollowing" }
+                    followers: { $size: "$followers" },
+                    following: { $size: "$isFollowing" }
                 }
             }
         ])
