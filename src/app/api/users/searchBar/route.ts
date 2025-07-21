@@ -7,22 +7,22 @@ import { NextRequest, NextResponse } from "next/server";
 
 dbConnect()
 
-export async function GET(request: NextRequest){
+export async function GET(request: NextRequest) {
     try {
         const { searchParams } = new URL(request.url);
         const prompt = searchParams.get("query");
         const token = request.cookies.get('token')?.value
-        if(!token) {
+        if (!token) {
             return NextResponse.json({})
         }
 
         const userId = await getDataFromToken(token)
-        if(!userId){
+        if (!userId) {
             return NextResponse.json({})
         }
 
-        if(!prompt) {
-            return NextResponse.json({message:"No search material"}, {status:400})
+        if (!prompt) {
+            return NextResponse.json({ message: "No search material" }, { status: 400 })
         }
 
         const blogsRaw = await Blog.aggregate([
@@ -37,14 +37,14 @@ export async function GET(request: NextRequest){
             {
                 $lookup: {
                     from: "likes",
-                    let: {blogId: "$_id"},
+                    let: { blogId: "$_id" },
                     pipeline: [
                         {
                             $match: {
                                 $expr: {
                                     $and: [
-                                        {$eq: ["$blogId", "$$blogId"]},
-                                        {$eq: ["$likedBy", new mongoose.Types.ObjectId(userId)]}
+                                        { $eq: ["$blogId", "$$blogId"] },
+                                        { $eq: ["$likedBy", new mongoose.Types.ObjectId(userId)] }
                                     ]
                                 }
                             }
@@ -61,24 +61,24 @@ export async function GET(request: NextRequest){
                     as: "author",
                 }
             },
-            { $unwind : "$author" },
+            { $unwind: "$author" },
             {
                 $match: {
-                    $or:[
-                        {title: new RegExp(prompt, 'i')},
-                        {content: new RegExp(prompt, 'i')},
-                        {tags: {$in: [new RegExp(prompt, 'i')]}},
-                        {"author.username" : new RegExp(prompt, 'i')},
-                        {"author.name" : new RegExp(prompt, 'i')}
+                    $or: [
+                        { title: new RegExp(prompt, 'i') },
+                        { content: new RegExp(prompt, 'i') },
+                        { tags: { $in: [new RegExp(prompt, 'i')] } },
+                        { "author.username": new RegExp(prompt, 'i') },
+                        { "author.name": new RegExp(prompt, 'i') }
                     ]
                 }
             },
             {
                 $addFields: {
-                    likes: {$size: "$likesDocs"},
+                    likes: { $size: "$likesDocs" },
                     hasLiked: {
                         $cond: {
-                            if: {$gt : [{$size: "$userLike"}, 0]},
+                            if: { $gt: [{ $size: "$userLike" }, 0] },
                             then: true,
                             else: false
                         }
@@ -88,12 +88,12 @@ export async function GET(request: NextRequest){
             {
                 $project: {
                     _id: 1,
-                    title: 1, 
+                    title: 1,
                     content: 1,
                     author: {
-                        username: 1,
-                        name: 1,
-                        profileImage: 1,
+                        username: '$author.username',
+                        name: '$author.name',
+                        profileImage: '$author.profileImage',
                     },
                     tags: 1,
                     likes: 1,
@@ -114,23 +114,50 @@ export async function GET(request: NextRequest){
         const users = await User.aggregate([
             {
                 $match: {
-                    $or: [
-                        {name: new RegExp(prompt, 'i')},
-                        {username: new RegExp(prompt, 'i')}
+                    $and: [
+                        {
+                            $or: [
+                                { name: new RegExp(prompt, 'i') },
+                                { username: new RegExp(prompt, 'i') }
+                            ]
+                        },
+                        {
+                            _id: {$ne: new mongoose.Types.ObjectId(userId)}
+                        }
                     ]
                 }
             },
             {
                 $lookup: {
-                    from :"follows",
+                    from: "follows",
                     localField: "_id",
                     foreignField: "following",
                     as: "all_followers"
                 }
             },
             {
+                $lookup: {
+                    from: 'follows',
+                    let: { targetId: '$_id' },
+                    pipeline: [
+                        {
+                            $match: {
+                                $expr: {
+                                    $and: [
+                                        { $eq: ['$follower', new mongoose.Types.ObjectId(userId)] },
+                                        { $eq: ['$following', '$$targetId'] }
+                                    ]
+                                }
+                            }
+                        }
+                    ],
+                    as: 'user_followed_record'
+                }
+            },
+            {
                 $addFields: {
-                followers: { $size: "$all_followers" }
+                    followers: { $size: "$all_followers" },
+                    hasFollowed: { $gt: [{ $size: '$user_followed_record' }, 0] }
                 }
             },
             {
@@ -139,18 +166,19 @@ export async function GET(request: NextRequest){
                     name: 1,
                     username: 1,
                     profileImage: 1,
-                    followers: 1
+                    followers: 1,
+                    hasFollowed: 1,
                 }
             }
         ])
 
         return NextResponse.json({
-            message:"Search succesful",
+            message: "Search succesful",
             success: true,
             blogs,
             users
-        }, {status: 200})
+        }, { status: 200 })
     } catch (error: any) {
-        return NextResponse.json({message:"Failed while searching"}, {status:500})
+        return NextResponse.json({ message: "Failed while searching" }, { status: 500 })
     }
 }
