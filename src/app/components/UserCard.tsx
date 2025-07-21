@@ -8,16 +8,25 @@ interface User {
     username: string;
     profileImage: string;
     followers: number;
+    hasFollowed: boolean;
 }
 
 interface Props {
     user: User;
 }
 export default function UserCard({ user }: Props) {
-    const [follow, setFollow] = useState(false)
+    const [follow, setFollow] = useState<boolean>(user.hasFollowed)
+    const [followerCount, setFollowerCount] = useState<number>(user.followers)
+
     const followButton = async () => {
         try {
             const response = await axios.post('/api/users/follow', {followingId: user._id})
+            setFollow(prev => !prev)
+            if(follow) {
+                setFollowerCount(prev => prev - 1)
+            } else {
+                setFollowerCount(prev => prev + 1)
+            }
             console.log("Follow request sent successfully", response.data);
         } catch (error: any) {
             console.log(error.message)
@@ -35,13 +44,12 @@ export default function UserCard({ user }: Props) {
                 <div>
                     <p className="text-base font-bold">{user.name}</p>
                     <p className="text-sm font-thin">@{user.username}</p>
-                    <p className="text-sm font-thin">{user.followers}</p>
+                    <p className="text-sm font-thin">{followerCount}</p>
                 </div>
             </Link>
             <button
                 onClick={() => {
                     followButton()
-                    setFollow(!follow)
                 }}
                 className={`text-white font-semibold py-2 px-4 rounded-full ${follow ? 'border' : 'bg-blue-500 hover:bg-blue-600'}`}>
                 {follow ? 'Unfollow' : 'Follow'}

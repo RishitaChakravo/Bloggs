@@ -12,6 +12,7 @@ export interface User {
     username: string;
     profileImage: string;
     followers: number;
+    hasFollowed: boolean;
 }
 
 export interface BlogUser {

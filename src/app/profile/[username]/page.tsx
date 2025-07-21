@@ -32,12 +32,15 @@ interface User {
   following: number;
   coverImage: string;
   profileImage: string;
+  hasFollowed: boolean;
 }
 
 export default function PublicProfilePage() {
   const { username } = useParams()
   const [user, setUser] = useState<User | null>(null)
   const [blogs, setBlogs] = useState<Blog[]>([])
+  const [hasfollowed, setHasfollowed] = useState<boolean>(false)
+  const [followCount, setFollowCount] = useState<number>(0)
 
   useEffect(() => {
     if (!username) return;
@@ -48,6 +51,9 @@ export default function PublicProfilePage() {
           withCredentials: true,
         })
         setUser(res.data.data)
+        setHasfollowed(res.data.data.hasFollowed)
+        setFollowCount(res.data.data.followers)
+        console.log(res.data.data)
       } catch (err) {
         console.error("Failed to fetch user", err)
       }
@@ -70,8 +76,15 @@ export default function PublicProfilePage() {
 
   const follow = async () => {
     try {
-      const response = await axios.post('/api/users/follow', {followingId: user._id})
-      toast.success(`You followed ${user.name}`)
+      const response = await axios.post('/api/users/follow', { followingId: user._id })
+
+      if(hasfollowed) {
+        setFollowCount(prev => prev - 1)
+        toast.success(`You unfollowed ${user.name}`)
+      } else {
+        setFollowCount(prev => prev + 1)
+        toast.success(`You followed ${user.name}`)
+      }
     } catch (error: any) {
       toast.error(error.response?.data?.error || "Could not follow user")
     }
@@ -97,19 +110,26 @@ export default function PublicProfilePage() {
             <p className="text-white/60">@{user.username}</p>
             <div className="flex items-center gap-6 mt-3">
               <div className="text-center">
-                <p className="text-lg font-semibold">{user.followers > 0 ? user.followers : '0'}</p>
+                <p className="text-lg font-semibold">{followCount || 0}</p>
                 <p className="text-sm text-white/50">Followers</p>
               </div>
               <div className="text-center">
                 <p className="text-lg font-semibold">{user.following > 0 ? user.following : '0'}</p>
                 <p className="text-sm text-white/50">Following</p>
               </div>
-              <button
-                onClick={follow}
-                className="ml-auto px-4 py-1.5 bg-blue-600 hover:bg-blue-700 transition rounded-md text-sm font-medium"
-              >
-                Follow
-              </button>
+              {hasfollowed ? (
+                <button
+                  onClick={follow}
+                  className="ml-auto px-4 py-1.5 bg-transparent border hover:bg-blue-700 hover:border-blue-700 transition rounded-md text-sm font-medium"
+                >
+                  UnFollow
+                </button>) : (
+                <button
+                  onClick={follow}
+                  className="ml-auto px-4 py-1.5 bg-blue-600 hover:bg-blue-700 transition rounded-md text-sm font-medium"
+                >
+                  Follow
+                </button>)}
             </div>
           </div>
         </div>
