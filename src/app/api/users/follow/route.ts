@@ -6,28 +6,33 @@ import { dbConnect } from "@/dbConfig/dbConnect";
 
 dbConnect()
 
-export async function POST(request: NextRequest){
+export async function POST(request: NextRequest) {
     try {
         const reqBody = await request.json()
-        const {followingId} = reqBody
+        const { followingId } = reqBody
         const token = request.cookies.get('token')?.value
-    
-        if(!token) {
-            return NextResponse.json({error: "Inavlid Token"}, {status: 400})
+
+        if (!token) {
+            return NextResponse.json({ error: "Inavlid Token" }, { status: 400 })
         }
         const userId = await getDataFromToken(token)
-    
+
+        if (userId === followingId) {
+            return NextResponse.json({
+                error: "You cannot follow yourself",
+            }, { status: 400 });
+        }
         const existing = await Follow.findOne({
             follower: userId,
             following: followingId
-        }) 
-    
-        if(existing) {
+        })
+
+        if (existing) {
             await Follow.findByIdAndDelete(existing._id)
             return NextResponse.json({
                 message: "Unfollowed successfully",
                 success: true
-            }, {status: 200})
+            }, { status: 200 })
         } else {
             const newFollow = await Follow.create({
                 follower: userId,
@@ -37,9 +42,13 @@ export async function POST(request: NextRequest){
                 message: "Followed successfully",
                 success: true,
                 data: newFollow
-            }, {status: 200})
+            }, { status: 200 })
         }
     } catch (error: any) {
         console.error("something went wrong while sending follow request", error)
+        return NextResponse.json({
+            error: "Internal Server Error",
+            success: false
+        }, { status: 500 });
     }
 }
