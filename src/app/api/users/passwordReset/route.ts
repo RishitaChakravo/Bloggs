@@ -1,0 +1,49 @@
+import { NextRequest, NextResponse } from "next/server";
+
+export async function POST(request: NextRequest) {
+    try {
+        const reqBody = await request.json()
+        const { email } = reqBody
+
+        const otp = Math.floor(100000 + Math.random()*900000)
+        const res = await fetch('https://sandbox.api.mailtrap.io/api/send/3910476', {
+            method: 'POST',
+            headers: {
+                "Authorization": `${process.env.MAILTRAP_API_KEY}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                from: {
+                    email: "chakravortyRishita@mailtrap.com",
+                    name: "BLOGGS"
+                },
+                to: [
+                    {
+                        email: email
+                    }
+                ],
+                subject: "Password Reset",
+                text: `We received a request to reset your password.
+                Your One-Time Password (OTP) is: ${otp}
+                Please enter this OTP on the password reset page. This code will expire in 10 minutes.
+                If you did not request a password reset, you can safely ignore this email.
+                Thanks,
+                The BLOGGS Team`
+                ,
+                category: "Password Reset"
+            })
+        })
+
+        return NextResponse.json({
+            message: "mail was sent successfully",
+            success: true,
+            otp
+        }, { status: 200 })
+    } catch (error: any) {
+        return NextResponse.json({
+            success: false,
+            message: "Something went wrong",
+            error: error instanceof Error ? error.message : String(error)
+        }, { status: 500 });
+    }
+}
