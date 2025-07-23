@@ -5,9 +5,9 @@ import { getDataFromToken } from "@/helpers/getDataFromToken";
 
 import { dbConnect } from "@/dbConfig/dbConnect";
 
-dbConnect()
-
 export async function GET(request : NextRequest){
+    await dbConnect()
+    
     try {
         const token = request.cookies.get('token')?.value
         if(!token) {

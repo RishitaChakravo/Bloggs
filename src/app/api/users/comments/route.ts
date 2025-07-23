@@ -1,8 +1,10 @@
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import { NextRequest, NextResponse } from "next/server";
 import Comment from '@/models/commentModel'
+import { dbConnect } from "@/dbConfig/dbConnect";
 
 export async function POST(request: NextRequest) {
+    await dbConnect()
     try {
         const token = request.cookies.get('token')?.value
         if (!token) {

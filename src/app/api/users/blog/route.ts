@@ -5,9 +5,8 @@ import { getDataFromToken } from "@/helpers/getDataFromToken";
 import mongoose from 'mongoose'
 import { dbConnect } from "@/dbConfig/dbConnect";
 
-dbConnect()
-
 export async function POST(request: NextRequest){
+    await dbConnect()
     try {
         const reqbody: any = await request.json()
         const {content, tags, title} = await reqbody

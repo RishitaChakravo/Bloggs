@@ -3,9 +3,9 @@ import { getDataFromToken } from "@/helpers/getDataFromToken";
 import User from "@/models/userModel";
 import { NextRequest, NextResponse } from "next/server";
 
-dbConnect()
-
 export async function POST(request: NextRequest){
+    await dbConnect()
+    
     try {
         const token = request.cookies.get("token")?.value
 

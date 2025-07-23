@@ -1,15 +1,20 @@
 import { NextRequest, NextResponse } from "next/server";
+import OTP from '@/models/otpModel'
+import bcrypt from "bcryptjs";
+import { dbConnect } from "@/dbConfig/dbConnect";
 
 export async function POST(request: NextRequest) {
+    await dbConnect()
+    
     try {
         const reqBody = await request.json()
         const { email } = reqBody
 
-        const otp = Math.floor(100000 + Math.random()*900000)
+        const otp = Math.floor(100000 + Math.random()*900000).toString()
         const res = await fetch('https://sandbox.api.mailtrap.io/api/send/3910476', {
             method: 'POST',
             headers: {
-                "Authorization": `${process.env.MAILTRAP_API_KEY}`,
+                "Authorization": `${process.env.MAILTRAP_API_TOKEN}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
@@ -34,10 +39,22 @@ export async function POST(request: NextRequest) {
             })
         })
 
+        if(!res.ok) {
+            throw new Error("Failed to send OTP email")
+        }
+        await OTP.deleteMany({ email })
+
+        const hashedOtp = await bcrypt.hash(otp, 10)
+        
+        const otpDoc = await OTP.create({
+            email: email,
+            otpHash: hashedOtp,
+            expiresAt: new Date(Date.now() + 10 * 60 * 1000)
+        })
+
         return NextResponse.json({
             message: "mail was sent successfully",
             success: true,
-            otp
         }, { status: 200 })
     } catch (error: any) {
         return NextResponse.json({

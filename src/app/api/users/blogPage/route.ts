@@ -1,9 +1,12 @@
+import { dbConnect } from "@/dbConfig/dbConnect";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import Blog from "@/models/blogModel";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest) {
+    await dbConnect()
+
     const token = request.cookies.get('token')?.value
     if(!token) {
         return NextResponse.json({})

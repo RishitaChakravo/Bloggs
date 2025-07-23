@@ -3,8 +3,10 @@ import Like from '@/models/likeSchema'
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import Blog from "@/models/blogModel";
 import mongoose from "mongoose";
+import { dbConnect } from "@/dbConfig/dbConnect";
 
 export async function POST(request: NextRequest) {
+    await dbConnect()
     try {
         const { blogId } = await request.json()
         if (!blogId || !mongoose.Types.ObjectId.isValid(blogId)) {

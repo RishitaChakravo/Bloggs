@@ -5,9 +5,8 @@ import User from "@/models/userModel";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
 
-dbConnect()
-
 export async function GET(request: NextRequest) {
+    await dbConnect()
     try {
         const { searchParams } = new URL(request.url);
         const prompt = searchParams.get("query");

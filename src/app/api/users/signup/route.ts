@@ -5,8 +5,6 @@ import { uploadCloudinary } from "@/helpers/cloudinary";
 import { dbConnect } from "@/dbConfig/dbConnect";
 import { parseForm } from "@/lib/parseForm";
 
-dbConnect()
-
 export const config = {
   api: {
     bodyParser: false
@@ -14,6 +12,7 @@ export const config = {
 };
 
 export async function POST(request: NextRequest) {
+    await dbConnect()
     try {
         const {fields, files} = await parseForm(request)
  

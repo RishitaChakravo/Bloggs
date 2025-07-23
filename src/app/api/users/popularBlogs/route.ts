@@ -1,7 +1,9 @@
+import { dbConnect } from "@/dbConfig/dbConnect";
 import Blog from "@/models/blogModel";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest){
+    await dbConnect()
     try {
         const blogs = await Blog.aggregate([
             {

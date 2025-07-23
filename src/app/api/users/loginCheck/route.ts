@@ -1,6 +1,8 @@
+import { dbConnect } from "@/dbConfig/dbConnect";
 import { NextRequest, NextResponse } from "next/server";
 
 export async function GET(request: NextRequest){
+    await dbConnect()
     try {
         const token = request.cookies.get('token')?.value
         if(!token) {

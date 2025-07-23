@@ -4,9 +4,9 @@ import { getDataFromToken } from "@/helpers/getDataFromToken";
 
 import { dbConnect } from "@/dbConfig/dbConnect";
 
-dbConnect()
-
 export async function POST(request: NextRequest) {
+    await dbConnect()
+    
     try {
         const reqBody = await request.json()
         const { followingId } = reqBody
