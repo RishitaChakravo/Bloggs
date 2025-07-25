@@ -5,7 +5,7 @@ import { dbConnect } from "@/dbConfig/dbConnect";
 
 export async function POST(request: NextRequest) {
     await dbConnect()
-    
+
     try {
         const reqBody = await request.json()
         const { email } = reqBody
@@ -14,12 +14,12 @@ export async function POST(request: NextRequest) {
         const res = await fetch('https://sandbox.api.mailtrap.io/api/send/3910476', {
             method: 'POST',
             headers: {
-                "Authorization": `${process.env.MAILTRAP_API_TOKEN}`,
+                "Authorization": `Bearer ${process.env.MAILTRAP_API_TOKEN}`,
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
                 from: {
-                    email: "chakravortyRishita@mailtrap.com",
+                    email: "hello@example.com",
                     name: "BLOGGS"
                 },
                 to: [
