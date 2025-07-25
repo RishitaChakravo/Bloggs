@@ -141,7 +141,7 @@ export default function Profile() {
           </Link>
         </div>
       ) : (
-        <div className="max-w-4xl mx-auto mt-10 grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="mx-auto mt-10 flex flex-wrap justify-center max-w-screen sm:max-w-3xl gap-6">
           {blogs.map((blog, index) => (
             <BlogCard key={index} blog={blog} />
           ))}

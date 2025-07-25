@@ -76,8 +76,8 @@ export default function Login() {
                         onClick={onLogin}
                         disabled={disabled || loading}
                         className={`w-full py-2 rounded-full transition duration-300 ${disabled
-                                ? "bg-gray-700 text-gray-400 cursor-not-allowed"
-                                : "bg-blue-600 hover:bg-blue-700 text-white"
+                            ? "bg-gray-700 text-gray-400 cursor-not-allowed"
+                            : "bg-blue-600 hover:bg-blue-700 text-white"
                             }`}
                     >
                         {loading ? "Logging in..." : "Login"}
@@ -88,10 +88,19 @@ export default function Login() {
                     </p>
                 </div>
 
-                <p className="text-sm text-center mt-6">
-                    Don't have an account?{" "}
-                    <Link href="/signup" className="text-blue-400 hover:underline">Sign Up</Link>
-                </p>
+                <div className="flex items-center justify-between mt-4 space-x-4 text-sm text-gray-600">
+                    <p className="m-0">
+                        <Link href="/forgotPassword/step1" className="text-blue-500 hover:underline">
+                        Forgot Password?
+                        </Link>
+                    </p>
+                    <p className="m-0">
+                        Don't have an account?{" "}
+                        <Link href="/signup" className="text-blue-500 hover:underline">
+                        Sign Up
+                        </Link>
+                    </p>
+                </div>
             </div>
             <Toaster
                 position="top-center"
