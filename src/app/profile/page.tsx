@@ -143,7 +143,7 @@ export default function Profile() {
       ) : (
         <div className="mx-auto mt-10 flex flex-wrap justify-center max-w-screen sm:max-w-3xl gap-6">
           {blogs.map((blog, index) => (
-            <BlogCard key={index} blog={blog} />
+            <BlogCard key={index} blog={blog} showButton={true}/>
           ))}
         </div>
       )}

@@ -37,7 +37,7 @@ export default function HeroSec() {
                     <Link href={success ? '/blogPage' : '/login'}>
                         <button className="text-xl text-white border border-white px-7 py-2 rounded-full bg-black/50 hover:bg-black hover:cursor-pointer transition-all duration-300">Explore Blogs</button>
                     </Link>
-                    <Link href={success ? '/writeup' : '/login'}>
+                    <Link href={success ? '/writeUp' : '/login'}>
                         <button
                             className="text-xl text-gray-800 border px-7 py-2 rounded-full bg-white hover:bg-transparent hover:text-white transition duration-300">Start Writing</button>
                     </Link>
