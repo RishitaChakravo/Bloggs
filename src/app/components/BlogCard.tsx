@@ -6,7 +6,7 @@ import { ArrowLeft, Delete, DeleteIcon, Edit, Heart, Trash } from "lucide-react"
 import axios from "axios";
 import Link from "next/link";
 import { Comment } from "./BlogCard2";
-import toast from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 
 interface Blog {
     _id: string;
@@ -24,7 +24,7 @@ interface Props {
     showButton?: boolean;
 }
 
-export default function BlogCard({ blog, showButton = true }: Props) {
+export default function BlogCard({ blog, showButton = false }: Props) {
     const limit = 100
     const isLong = blog.content.length > 100
     const [expanded, setExpanded] = useState(false)
@@ -33,6 +33,8 @@ export default function BlogCard({ blog, showButton = true }: Props) {
     const [editBlock, setEditBlock] = useState(false)
     const [title, setTitle] = useState(blog.title)
     const [content, setContent] = useState(blog.content)
+    const [tags, setTags] = useState<string[]>(blog.tags)
+    const [newTag, setNewTag] = useState<string>("")
 
     const toggleExpand = () => { setExpanded(!expanded) }
     const onLike = async () => {
@@ -55,12 +57,15 @@ export default function BlogCard({ blog, showButton = true }: Props) {
 
     const editBlog = async () => {
         try {
-            const response = await axios.post('/api/users/editBlog', { blogId: blog._id, title, content})
+            const response = await axios.post('/api/users/editBlog', { blogId: blog._id, title, content, tags })
             if (response.data.success) {
                 toast.success("Edited Blog")
+            } else {
+                toast.error(response.data.message || "Failed to edit blog");
             }
         } catch (error: any) {
             console.error(error.message)
+            toast.error("An error occurred while editing the blog.")
         }
     }
 
@@ -74,6 +79,11 @@ export default function BlogCard({ blog, showButton = true }: Props) {
             console.error(error.message)
         }
     }
+
+    const deletetag = () => {
+        setTags(prevTags => prevTags.slice(0, -1))
+    }
+
     return (
         <div className="flex-1 min-w-[250px] max-w-[300px] p-1 rounded-xl border bg-slate-800">
             {editBlock && (
@@ -87,6 +97,39 @@ export default function BlogCard({ blog, showButton = true }: Props) {
                             <ArrowLeft className="w-5 h-5 text-white" />
                         </button>
                         <h2 className="text-xl font-semibold text-white text-center">Edit Blog</h2>
+                        <div className="h-auto w-full flex flex-wrap gap-1 px-2">
+                            {tags.map((tag, idx) => (
+                                <span key={idx} className="rounded-lg text-sm bg-zinc-700/60 px-1">#{tag}</span>
+                            ))}
+                        </div>
+                        <div className="flex items-center gap-3 p-3 bg-zinc-800 border border-zinc-700 rounded-xl shadow-lg">
+                            <input
+                                value={newTag}
+                                onChange={(e) => setNewTag(e.target.value)}
+                                placeholder="Enter tag"
+                                className="flex-1 px-3 py-2 text-sm text-white bg-zinc-900 border border-zinc-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-600 placeholder-zinc-400"
+                            />
+
+                            <button
+                                onClick={() => {
+                                    if (newTag?.trim()) {
+                                        setTags(prev => [...prev, newTag.trim()]);
+                                        setNewTag("");
+                                    }
+                                }}
+                                className="px-4 py-2 text-sm font-semibold text-white bg-blue-600 rounded-lg hover:bg-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all"
+                            >
+                                Add
+                            </button>
+
+                            <button
+                                onClick={deletetag}
+                                className="px-4 py-2 text-sm font-semibold text-white bg-red-600 rounded-lg hover:bg-red-500 focus:outline-none focus:ring-2 focus:ring-red-400 transition-all"
+                            >
+                                Delete
+                            </button>
+                        </div>
+
                         <input
                             value={title}
                             onChange={(e) => setTitle(e.target.value)}
@@ -101,7 +144,10 @@ export default function BlogCard({ blog, showButton = true }: Props) {
                         />
                         <div className="flex justify-center">
                             <button
-                                onClick={editBlog}
+                                onClick={() => {
+                                    editBlog()
+                                    setEditBlock(false)
+                                }}
                                 className="px-6 py-2 text-sm font-semibold bg-blue-600 text-white rounded-md shadow hover:bg-blue-700 transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             >
                                 Save Changes
@@ -164,6 +210,9 @@ export default function BlogCard({ blog, showButton = true }: Props) {
                     </button>
                 </p>
             </div>
+            <Toaster position="bottom-right"
+            toastOptions={{style: {zIndex: 200}}}
+            />
         </div>
     )
 }
