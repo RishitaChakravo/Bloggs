@@ -1,11 +1,11 @@
-"use client"
+"use client";
 
-import axios from "axios"
-import { useEffect, useState } from "react"
-import { useParams } from "next/navigation"
-import BlogCard from "@/app/components/BlogCard"
-import { Comment } from "@/app/components/BlogCard2"
-import toast from "react-hot-toast"
+import axios from "axios";
+import { useEffect, useState } from "react";
+import { useParams } from "next/navigation";
+import BlogCard from "@/app/components/BlogCard";
+import { Comment } from "@/app/components/BlogCard2";
+import toast from "react-hot-toast";
 
 export interface Blog {
   _id: string;
@@ -15,7 +15,7 @@ export interface Blog {
   tags: string[];
   hasLiked: boolean;
   likes: number;
-  commentDocs: Comment[]
+  commentDocs: Comment[];
 }
 
 export interface BlogUser {
@@ -36,11 +36,11 @@ interface User {
 }
 
 export default function PublicProfilePage() {
-  const { username } = useParams()
-  const [user, setUser] = useState<User | null>(null)
-  const [blogs, setBlogs] = useState<Blog[]>([])
-  const [hasfollowed, setHasfollowed] = useState<boolean>(false)
-  const [followCount, setFollowCount] = useState<number>(0)
+  const { username } = useParams();
+  const [user, setUser] = useState<User | null>(null);
+  const [blogs, setBlogs] = useState<Blog[]>([]);
+  const [hasFollowed, setHasFollowed] = useState(false);
+  const [followCount, setFollowCount] = useState(0);
 
   useEffect(() => {
     if (!username) return;
@@ -49,106 +49,120 @@ export default function PublicProfilePage() {
       try {
         const res = await axios.get(`/api/users/otherProfile?username=${username}`, {
           withCredentials: true,
-        })
-        setUser(res.data.data)
-        setHasfollowed(res.data.data.hasFollowed)
-        setFollowCount(res.data.data.followers)
-        console.log(res.data.data)
+        });
+        setUser(res.data.data);
+        setHasFollowed(res.data.data.hasFollowed);
+        setFollowCount(res.data.data.followers);
       } catch (err) {
-        console.error("Failed to fetch user", err)
+        console.error("Failed to fetch user", err);
       }
-    }
+    };
 
     const fetchBlogs = async () => {
       try {
-        const res = await axios.get(`/api/users/blogDisplay?username=${username}`)
-        setBlogs(res.data.blogs)
+        const res = await axios.get(`/api/users/blogDisplay?username=${username}`);
+        setBlogs(res.data.blogs);
       } catch (err) {
-        console.error("Failed to fetch blogs", err)
+        console.error("Failed to fetch blogs", err);
       }
-    }
+    };
 
-    fetchProfile()
-    fetchBlogs()
-  }, [username])
+    fetchProfile();
+    fetchBlogs();
+  }, [username]);
 
-  if (!user) return <p className="text-center mt-10 text-lg text-white/60">Loading profile...</p>
-
-  const follow = async () => {
+  const toggleFollow = async () => {
     try {
-      const response = await axios.post('/api/users/follow', { followingId: user._id })
-
-      if(hasfollowed) {
-        setFollowCount(prev => prev - 1)
-        toast.success(`You unfollowed ${user.name}`)
+      await axios.post("/api/users/follow", { followingId: user?._id });
+      if (hasFollowed) {
+        setFollowCount((prev) => prev - 1);
+        toast.success(`You unfollowed ${user?.name}`);
       } else {
-        setFollowCount(prev => prev + 1)
-        toast.success(`You followed ${user.name}`)
+        setFollowCount((prev) => prev + 1);
+        toast.success(`You followed ${user?.name}`);
       }
-    } catch (error: any) {
-      toast.error(error.response?.data?.error || "Could not follow user")
+      setHasFollowed(!hasFollowed);
+    } catch (err: any) {
+      toast.error(err.response?.data?.error || "Failed to follow/unfollow");
     }
-  }
+  };
+
+  if (!user)
+    return (
+      <div className="h-screen w-full flex justify-center items-center text-white text-lg">
+        Loading profile...
+      </div>
+    );
 
   return (
     <div className="p-4 bg-neutral-900 min-h-screen text-white">
-      <div className="mx-auto max-w-3xl border rounded-xl bg-slate-800 shadow-md overflow-hidden">
+      {/* Profile Card */}
+      <div className="max-w-3xl mx-auto rounded-xl overflow-hidden shadow-lg bg-slate-800 relative">
+        {/* Cover Image */}
         <div
-          className="w-full h-[250px] bg-cover bg-center"
+          className="h-60 bg-cover bg-center"
           style={{
-            backgroundImage: `url(${user.coverImage || 'https://images.pexels.com/photos/547114/pexels-photo-547114.jpeg'})`,
+            backgroundImage: `url(${user.coverImage || "https://images.pexels.com/photos/32356082/pexels-photo-32356082.jpeg"})`,
           }}
         />
-        <div className="relative px-6 pb-6 pt-4">
+
+        {/* Profile Image */}
+        <div className="absolute top-40 left-6 z-10">
           <img
-            src={user.profileImage || "https://images.pexels.com/photos/547114/pexels-photo-547114.jpeg"}
-            alt="Profile"
-            className="w-[120px] h-[120px] border-4 border-white rounded-full absolute -top-[60px] left-6 object-cover"
+            src={user.profileImage || "https://images.pexels.com/photos/32356082/pexels-photo-32356082.jpeg"}
+            alt="profile"
+            className="w-32 h-32 rounded-full border-4 border-slate-900 object-cover shadow-md"
           />
-          <div className="ml-[140px]">
-            <h2 className="text-2xl font-bold">{user.name}</h2>
-            <p className="text-white/60">@{user.username}</p>
-            <div className="flex items-center gap-6 mt-3">
-              <div className="text-center">
-                <p className="text-lg font-semibold">{followCount || 0}</p>
-                <p className="text-sm text-white/50">Followers</p>
+        </div>
+
+        {/* Profile Info */}
+        <div className="p-6 pt-24">
+          <div className="flex justify-between items-start flex-wrap gap-2">
+            <div>
+              <h1 className="text-3xl font-bold">{user.name}</h1>
+              <p className="text-xl text-gray-300">@{user.username}</p>
+              <div className="mt-4 text-center mx-auto flex gap-6">
+                <div>
+                  <p className="font-bold text-xl">{followCount}</p>
+                  <p className="text-gray-400 text-sm">Followers</p>
+                </div>
+                <div>
+                  <p className="font-bold text-xl">{user.following}</p>
+                  <p className="text-gray-400 text-sm">Following</p>
+                </div>
               </div>
-              <div className="text-center">
-                <p className="text-lg font-semibold">{user.following > 0 ? user.following : '0'}</p>
-                <p className="text-sm text-white/50">Following</p>
-              </div>
-              {hasfollowed ? (
-                <button
-                  onClick={follow}
-                  className="ml-auto px-4 py-1.5 bg-transparent border hover:bg-blue-700 hover:border-blue-700 transition rounded-md text-sm font-medium"
-                >
-                  UnFollow
-                </button>) : (
-                <button
-                  onClick={follow}
-                  className="ml-auto px-4 py-1.5 bg-blue-600 hover:bg-blue-700 transition rounded-md text-sm font-medium"
-                >
-                  Follow
-                </button>)}
             </div>
+
+            <button
+              onClick={toggleFollow}
+              className={`${
+                hasFollowed
+                  ? "border border-white hover:bg-blue-700 hover:border-blue-700"
+                  : "bg-blue-600 hover:bg-blue-700"
+              } transition-colors px-4 py-2 rounded-lg font-semibold text-white`}
+            >
+              {hasFollowed ? "Unfollow" : "Follow"}
+            </button>
           </div>
         </div>
       </div>
 
-      <div className="max-w-3xl mx-auto mt-6">
-        {blogs.length === 0 ? (
-          <div className="text-center py-10">
-            <p className="text-xl text-white/40">This user hasn't written any blogs yet.</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {blogs.map((blog, index) => (
-              <BlogCard key={index} blog={blog} />
-            ))}
-          </div>
-        )}
-      </div>
+      {/* Blog Section */}
+      {Array.isArray(blogs) && blogs.length === 0 ? (
+        <div className="text-center mt-8">
+          <p className="text-2xl text-gray-500 font-light">
+            This user hasn’t written any blogs yet.
+          </p>
+        </div>
+      ) : (
+        <div className="mx-auto mt-10 flex flex-wrap justify-center max-w-screen sm:max-w-3xl gap-6">
+          {blogs.map((blog, index) => (
+            <BlogCard key={index} blog={blog} />
+          ))}
+        </div>
+      )}
     </div>
-  )
+  );
 }
+
 

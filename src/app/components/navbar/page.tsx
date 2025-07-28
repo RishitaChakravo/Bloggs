@@ -49,7 +49,7 @@ export function NavBar({ isLoggedIn, showButton = true }: NavProp) {
             <div>
                 <p className="text-3xl text-blue-600 font-mono font-bold">bloggs</p>
             </div>
-            {success && <div className="flex w-auto gap-4">
+            {success && <div className="w-auto gap-4 hidden sm:flex">
                 <Link href="/">
                     <button>
                         <img src="https://img.icons8.com/ios-filled/50/ffffff/home.png" alt="Home" width="20" height="20" />
