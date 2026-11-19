@@ -58,11 +58,11 @@ export async function POST(request: NextRequest){
             data: finalBlog[0]
         }, {status: 200})
 
-    } catch (error: any) {
-        console.error("Blog creation failed", error)
-        return NextResponse.json(
-            { error: "Internal Server Error" },
-            { status: 500 }
-        );   
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        } else {
+            console.log("An unexpected error occurred");
+        }
     }
 }
