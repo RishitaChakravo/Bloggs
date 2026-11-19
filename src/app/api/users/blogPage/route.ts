@@ -110,7 +110,11 @@ export async function GET(request: NextRequest) {
             success: true,
             blogs
         }, { status: 200 })
-    } catch (err: any) {
-        return NextResponse.json({ error: err.message }, { status: 500 })
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        } else {
+            console.log("An unexpected error occurred");
+        }
     }
 }
