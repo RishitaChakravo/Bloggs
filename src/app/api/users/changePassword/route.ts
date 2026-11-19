@@ -35,11 +35,11 @@ export async function POST(request: NextRequest) {
       { message: "Password updated successfully", success: true },
       { status: 200 }
     );
-  } catch (error: any) {
-    console.error("Password change error:", error);
-    return NextResponse.json(
-      { error: "Internal server error" },
-      { status: 500 }
-    );
+  } catch (error: unknown) {
+      if (error instanceof Error) {
+          console.log(error.message);
+      } else {
+          console.log("An unexpected error occurred");
+      }
   }
 }
