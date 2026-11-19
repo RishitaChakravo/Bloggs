@@ -45,9 +45,13 @@ export default function SignUp() {
 
             toast.success("Sign Up successful!")
             console.log("Signup response:", response.data)
-        } catch (error: any) {
-            console.error("Failed during SignUp process", error)
-            toast.error(error?.response?.data?.message || "Sign up failed")
+        } catch (error: unknown) {
+            if (error instanceof Error) {
+                console.log(error.message);
+                toast.error(error?.response?.data?.message || "Sign up failed")
+            } else {
+                console.log("An unexpected error occurred");
+            }
         } finally {
             setLoading(false)
             router.push('/login')
