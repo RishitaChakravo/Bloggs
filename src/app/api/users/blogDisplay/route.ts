@@ -104,8 +104,11 @@ export async function GET(request: NextRequest) {
             success: true,
             blogs
         }, {status: 200})
-    } catch (error: any) {
-        console.error("API Error:", error);
-        return NextResponse.json({message: "error"}, {status: 500})       
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        } else {
+            console.log("An unexpected error occurred");
+        }
     }
 }
