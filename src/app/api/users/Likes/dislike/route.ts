@@ -34,7 +34,11 @@ export async function POST(request: NextRequest){
             message: "UnLiked",
             success: true
         }, {status: 200})
-    } catch (error: any) {
-        return NextResponse.json({message: "Internal Server Error", error: error.message}, {status: 500})
+    } catch (error: unknown) {
+        if (error instanceof Error) {
+            console.log(error.message);
+        } else {
+            console.log("An unexpected error occurred");
+        }
     }
 }
