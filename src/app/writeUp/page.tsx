@@ -33,7 +33,7 @@ export default function WriteUp() {
             console.log("Blog saved successfully", response);
             toast.success("Blog Posted Successfully!")
         } catch (error) {
-            console.error("Failed to save the blog", error);
+            console.error("Failed to save the blog", error instanceof Error ? error.message : error);
             toast.error("Something Went Wrong!!")
         } finally {
             setTags([]);
