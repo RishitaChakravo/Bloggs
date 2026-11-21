@@ -133,7 +133,7 @@ export default function Profile() {
       {/* Blog Section */}
       {Array.isArray(blogs) && blogs.length === 0 ? (
         <div className="text-center mt-8">
-          <p className="text-2xl text-gray-500 font-light">You haven't written any blogs yet.</p>
+          <p className="text-2xl text-gray-500 font-light">You haven&apos;t written any blogs yet.</p>
           <Link href="/writeUp">
             <button className="mt-4 bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-white">
               Start Writing
