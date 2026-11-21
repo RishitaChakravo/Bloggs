@@ -27,7 +27,7 @@ export default function FORGOT() {
             console.log(response.data.message)
             setSuccess(response.data.success)
         } catch (error) {
-            toast.error(error instanceof Error ? error.message : error)
+            toast.error(error instanceof Error ? error.message : "Something went wrong")
         } finally {
             setLoading(false)
         }
