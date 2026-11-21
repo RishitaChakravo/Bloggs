@@ -91,7 +91,7 @@ export async function GET(request : NextRequest){
             data: updatedUser[0]
         }, {status: 200})
 
-    } catch (error: any) {
+    } catch (error) {
         return NextResponse.json(
         {
             error: "Failed to fetch user profile",
