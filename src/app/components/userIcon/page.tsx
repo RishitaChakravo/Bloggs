@@ -16,8 +16,8 @@ export default function UserIcon() {
         try {
             const response = await axios.post('/api/users/logout')
             console.log("Successfully logged out", response.data)
-        } catch (error: any) {
-            console.error("Failed to logout", error)
+        } catch (error) {
+            console.error("Failed to logout", error instanceof Error ? error.message : error)
         }
     }
 
@@ -28,8 +28,8 @@ export default function UserIcon() {
                     withCredentials: true,
                 })
                 setUser(response.data.data)
-            } catch (error: any) {
-                console.log("User Data not fetched", error)
+            } catch (error) {
+                console.log("User Data not fetched", error instanceof Error ? error.message : error)
             }
         }
 
