@@ -1,8 +1,6 @@
-import User from "@/models/userModel";
 import Blog from "@/models/blogModel"
 import { NextRequest, NextResponse } from "next/server";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
-import mongoose from 'mongoose'
 import { dbConnect } from "@/dbConfig/dbConnect";
 
 export async function POST(request: NextRequest){
