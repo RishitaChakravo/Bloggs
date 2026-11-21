@@ -94,8 +94,8 @@ export async function GET(request: NextRequest) {
             success: true,
             data: updatedUser[0]
         })
-    } catch (error: any) {
-        console.error("❌ API Error:", error);
-        return NextResponse.json({ error: error }, { status: 500 })
+    } catch (error) {
+        console.error("❌ API Error:", error instanceof Error ? error.message : error);
+        return NextResponse.json({ error:error instanceof Error ? error.message : error }, { status: 500 })
     }
 }
