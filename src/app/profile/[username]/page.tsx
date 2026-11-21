@@ -83,7 +83,8 @@ export default function PublicProfilePage() {
       }
       setHasFollowed(!hasFollowed);
     } catch (error) {
-      toast.error("Failed to follow/unfollow", error instanceof Error ? error.message : error);
+      console.error(error instanceof Error ? error.message : error)
+      toast.error("Failed to follow/unfollow");
     }
   };
 
