@@ -8,19 +8,18 @@ export async function parseForm(request: NextRequest): Promise<{
     fields: Record<string, string>;
     files: Files;
 }> {
+    const reader = request.body?.getReader();
+
+    if (!reader) {
+        throw new Error("Request body is empty");
+    }
+
     const form = new IncomingForm({
         keepExtensions: true,
         multiples: true
     });
 
     return new Promise((resolve, reject) => {
-        const reader = request.body?.getReader();
-
-        if (!reader) {
-            reject(new Error("Request body is empty"));
-            return;
-        }
-
         const stream = new Readable({
             read() {}
         });
@@ -50,8 +49,6 @@ export async function parseForm(request: NextRequest): Promise<{
             url: request.url,
         });
 
-        pump();
-
         form.parse(
             stream as unknown as IncomingMessage,
             (err, fields: Fields, files: Files) => {
@@ -78,5 +75,7 @@ export async function parseForm(request: NextRequest): Promise<{
                 });
             }
         );
+
+        pump();
     });
 }
