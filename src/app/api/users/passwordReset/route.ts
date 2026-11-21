@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
             message: "mail was sent successfully",
             success: true,
         }, { status: 200 })
-    } catch (error: any) {
+    } catch (error) {
         return NextResponse.json({
             success: false,
             message: "Something went wrong",
