@@ -54,7 +54,7 @@ export default function Profile() {
         });
         setUser(response.data.data);
         toast.success("Profile fetched");
-      } catch (error: any) {
+      } catch (error) {
         toast.error("Failed to fetch Profile");
       } finally {
         setLoading(false);
@@ -66,7 +66,7 @@ export default function Profile() {
         const response = await axios.get("/api/users/blogDisplay");
         setBlogs(response.data.blogs);
         toast.success(response.data.message || "Blogs fetched");
-      } catch (error: any) {
+      } catch (error) {
         toast.error("Failed to fetch blogs");
       }
     };
