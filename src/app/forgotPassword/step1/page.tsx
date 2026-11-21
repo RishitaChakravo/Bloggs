@@ -26,8 +26,8 @@ export default function FORGOT() {
             toast.success("Otp sent to your Email")
             console.log(response.data.message)
             setSuccess(response.data.success)
-        } catch (error: any) {
-            toast.error(error.message)
+        } catch (error) {
+            toast.error(error instanceof Error ? error.message : error)
         } finally {
             setLoading(false)
         }
@@ -48,8 +48,8 @@ export default function FORGOT() {
             } else {
                 toast.error(response.data.message)
             }
-        } catch (error: any) {
-            toast.error(error.response?.data?.message || 'Something went wrong.')
+        } catch (error) {
+            toast.error('Something went wrong.')
         } finally {
             setLoading(false)
         }
