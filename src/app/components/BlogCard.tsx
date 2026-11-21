@@ -2,7 +2,7 @@
 
 import { BlogUser } from "../search/page";
 import { useState } from "react";
-import { ArrowLeft, Delete, DeleteIcon, Edit, Heart, Trash } from "lucide-react";
+import { ArrowLeft, Edit, Heart, Trash } from "lucide-react";
 import axios from "axios";
 import Link from "next/link";
 import { Comment } from "./BlogCard2";
