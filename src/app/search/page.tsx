@@ -54,8 +54,8 @@ export default function Search() {
                 })
                 setBlogs(response.data.blogs)
                 setUsers(response.data.users)
-            } catch (error: any) {
-                console.error("Search failed", error)
+            } catch (error) {
+                console.error("Search failed", error instanceof Error ? error.message : error)
             } finally {
                 setLoading(false)
             }
