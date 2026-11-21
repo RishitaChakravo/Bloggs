@@ -49,7 +49,7 @@ export default function FORGOT() {
                 toast.error(response.data.message)
             }
         } catch (error) {
-            toast.error('Something went wrong.')
+            toast.error(error instanceof Error ? error.message : "Something went wrong")
         } finally {
             setLoading(false)
         }
