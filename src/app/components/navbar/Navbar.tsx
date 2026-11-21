@@ -10,7 +10,7 @@ interface NavProp {
     showButton?: boolean
 }
 
-export function NavBar({ isLoggedIn, showButton = true }: NavProp) {
+export default function NavBar({ isLoggedIn, showButton = true }: NavProp) {
     const [success, setSuccess] = useState(false)
 
     const logout = async () => {
