@@ -18,8 +18,8 @@ export function NavBar({ isLoggedIn, showButton = true }: NavProp) {
         try {
             const response = await axios.post('/api/users/logout')
             console.log(response.data.message)
-        } catch (error: any) {
-            console.log(error.message)
+        } catch (error) {
+            console.log(error instanceof Error ? error.message : error)
         } finally {
             window.location.href = '/'
         }
@@ -31,11 +31,15 @@ export function NavBar({ isLoggedIn, showButton = true }: NavProp) {
                 const response = await axios.get('/api/users/loginCheck')
                 console.log(response.data.message)
                 setSuccess(response.data.success)
-            } catch (error: any) {
-                if (error.response?.status === 401) {
-                    setSuccess(false);
+            } catch (error) {
+                if (axios.isAxiosError(error)) {
+                    if (error.response?.status === 401) {
+                        setSuccess(false);
+                    } else {
+                        console.error("Unexpected error in login check:", error.message);
+                    }
                 } else {
-                    console.error("Unexpected error in login check:", error.message);
+                    console.error("Unexpected error in login check:", error);
                 }
             }
         }
