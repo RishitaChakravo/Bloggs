@@ -46,7 +46,7 @@ export async function POST(request: NextRequest) {
 
         const hashedOtp = await bcrypt.hash(otp, 10)
         
-        const otpDoc = await OTP.create({
+        await OTP.create({
             email: email,
             otpHash: hashedOtp,
             expiresAt: new Date(Date.now() + 10 * 60 * 1000)
