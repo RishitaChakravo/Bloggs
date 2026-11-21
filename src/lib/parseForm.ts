@@ -1,10 +1,11 @@
-import { IncomingForm } from "formidable";
+
+import { IncomingForm, Fields, Files } from "formidable";
 import { NextRequest } from "next/server";
 import { Readable } from "stream";
 
 export async function parseForm(request: NextRequest): Promise<{
-  fields: Record<string, string>,
-  files: Record<string, any>
+  fields: Record<string, string>;
+  files: Files;
 }> {
   const form = new IncomingForm({ keepExtensions: true, multiples: true });
 
@@ -13,21 +14,35 @@ export async function parseForm(request: NextRequest): Promise<{
     const stream = new Readable({ read() {} });
 
     async function pump() {
-      while (true) {
-        const { done, value } = await reader!.read();
-        if (done) {
-          stream.push(null);
-          break;
+      try {
+        while (true) {
+          const { done, value } = await reader!.read();
+
+          if (done) {
+            stream.push(null);
+            break;
+          }
+
+          stream.push(Buffer.from(value));
         }
-        stream.push(Buffer.from(value));
+      } catch (error) {
+        reject(error);
       }
     }
 
     pump();
 
-    (stream as any).headers = Object.fromEntries(request.headers.entries());
+    Object.assign(stream, {
+      headers: Object.fromEntries(request.headers.entries()),
+      method: request.method,
+      url: request.url,
+    });
 
-    form.parse(stream as any, (err, fields, files) => {
+    form.parse(stream as Readable & {
+      headers: Record<string, string>;
+      method: string;
+      url: string;
+    }, (err, fields: Fields, files: Files) => {
       if (err) return reject(err);
 
       const normalizedFields: Record<string, string> = {};
@@ -36,7 +51,7 @@ export async function parseForm(request: NextRequest): Promise<{
         if (typeof value === "string") {
           normalizedFields[key] = value;
         } else if (Array.isArray(value)) {
-          normalizedFields[key] = value[0] ?? ""; // fallback
+          normalizedFields[key] = value[0] ?? "";
         } else {
           normalizedFields[key] = "";
         }
@@ -44,12 +59,8 @@ export async function parseForm(request: NextRequest): Promise<{
 
       resolve({
         fields: normalizedFields,
-        files: files as Record<string, any>,
+        files,
       });
     });
   });
 }
-
-
-
-
