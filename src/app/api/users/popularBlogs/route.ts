@@ -39,7 +39,7 @@ export async function GET(request: NextRequest){
             blogs
         }, {status: 200})
 
-    } catch (error: any) {
+    } catch (error) {
         return NextResponse.json({
             error: "Error in fetching blogs",
             success: false
