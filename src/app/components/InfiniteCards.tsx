@@ -21,8 +21,8 @@ export function InfiniteCards() {
                 setBlogs(response.data.blogs)
                 console.log(response.data.blogs)
                 console.log(response.data.message)
-            } catch (error: any) {
-                console.error(error.message)
+            } catch (error) {
+                console.error(error instanceof Error ? error.message : error)
             }
         }
 
