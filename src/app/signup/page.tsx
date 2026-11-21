@@ -48,7 +48,7 @@ export default function SignUp() {
         } catch (error: unknown) {
             if (error instanceof Error) {
                 console.log(error.message);
-                toast.error(error?.response?.data?.message || "Sign up failed")
+                toast.error("Sign up failed")
             } else {
                 console.log("An unexpected error occurred");
             }
