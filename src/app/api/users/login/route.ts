@@ -5,12 +5,15 @@ import jwt from 'jsonwebtoken'
 
 import { dbConnect } from "@/dbConfig/dbConnect";
 
-
+interface LoginRequest{
+    email : string;
+    password : string;
+}
 export async function POST(request : NextRequest) {
     await dbConnect()
     
     try {
-        const reqBody: any = await request.json()
+        const reqBody: LoginRequest = await request.json()
         const {email, password} = reqBody
 
         if(
