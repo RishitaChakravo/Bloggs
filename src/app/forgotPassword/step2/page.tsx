@@ -1,45 +1,41 @@
 'use client'
 
 import axios from "axios"
-import { useSearchParams } from "next/navigation"
-import { useRouter } from "next/navigation"
-import { useEffect, useState } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
+import { Suspense, useState } from "react"
 import toast from "react-hot-toast"
 
-export default function PASSWORDRESET() {
+function PasswordResetForm() {
     const [enteredPass, setEnteredPass] = useState<string>("")
     const [confirmedPass, setConfirmPass] = useState<string>("")
     const searchParams = useSearchParams()
-    const [email, setEmail] = useState<string | null>(null)
+    const email = searchParams.get('email')
 
     const router = useRouter()
 
-    useEffect(() => {
-        const mail = searchParams.get('email')
-        setEmail(mail)
-    }, [])
-
-
     const changePassword = async () => {
-        if(enteredPass !== confirmedPass) {
+        if (enteredPass !== confirmedPass) {
             setEnteredPass("")
             setConfirmPass("")
-            toast.error("Password incorrect")
+            toast.error("Passwords do not match")
             return
         }
 
         try {
-            const response = await axios.post('/api/users/changePassword', {email, newPassword: confirmedPass})
-            if(response.data.success){
+            const response = await axios.post('/api/users/changePassword', {
+                email,
+                newPassword: confirmedPass,
+            })
+            if (response.data.success) {
                 toast.success("Password Changed")
                 router.push('/login')
             } else {
-                toast.error(response.data.error || "Something went wrong");
+                toast.error(response.data.error || "Something went wrong")
             }
         } catch (error) {
             console.error(error instanceof Error ? error.message : error)
-            toast.error("Server error");
-        } 
+            toast.error("Server error")
+        }
     }
 
     return (
@@ -70,5 +66,13 @@ export default function PASSWORDRESET() {
                 </button>
             </div>
         </div>
+    )
+}
+
+export default function PASSWORDRESET() {
+    return (
+        <Suspense fallback={null}>
+            <PasswordResetForm />
+        </Suspense>
     )
 }
