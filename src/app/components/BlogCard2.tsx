@@ -37,8 +37,8 @@ export default function BlogCard2({ blog }: { blog: Blog }) {
                 setLiked(false)
                 setLikeCount(prev => prev - 1)
             }
-        } catch (error: any) {
-            console.log("Like/Unlike process failed", error.message)
+        } catch (error) {
+            console.log("Like/Unlike process failed", error instanceof Error ? error.message : error)
         }
     }
 
@@ -51,8 +51,8 @@ export default function BlogCard2({ blog }: { blog: Blog }) {
             } else {
                 console.log("write a comment")
             }
-        } catch (error: any) {
-            console.error(error.message)
+        } catch (error) {
+            console.error(error instanceof Error ? error.message : error)
         } finally {
             setCommentContent("")
         }
