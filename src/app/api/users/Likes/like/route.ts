@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import Like from '@/models/likeSchema'
 import { getDataFromToken } from "@/helpers/getDataFromToken";
-import Blog from "@/models/blogModel";
 import mongoose from "mongoose";
 import { dbConnect } from "@/dbConfig/dbConnect";
 
@@ -27,7 +26,7 @@ export async function POST(request: NextRequest) {
             return NextResponse.json({ message: "Already liked" }, { status: 200 });
         }
         if (!existing) {
-            const newLike = await Like.create({
+            await Like.create({
                 likedBy: userId,
                 blogId
             })
