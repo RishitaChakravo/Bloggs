@@ -5,7 +5,7 @@ export const getDataFromToken = async (token: string) => {
         const decodedToken = jwt.verify(token, process.env.JWT_SECRET!) as {id : string}
         return decodedToken.id
     } catch (error) {
-        console.error("Invalid Token")
+        console.error("Invalid Token", error instanceof Error ? error.message : error)
         return null
     }
 }
