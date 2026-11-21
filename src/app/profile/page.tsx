@@ -55,7 +55,7 @@ export default function Profile() {
         setUser(response.data.data);
         toast.success("Profile fetched");
       } catch (error) {
-        toast.error("Failed to fetch Profile");
+        toast.error("Failed to fetch Profile", error instanceof Error ? error.message : error);
       } finally {
         setLoading(false);
       }
@@ -67,7 +67,7 @@ export default function Profile() {
         setBlogs(response.data.blogs);
         toast.success(response.data.message || "Blogs fetched");
       } catch (error) {
-        toast.error("Failed to fetch blogs");
+        toast.error("Failed to fetch blogs", error instanceof Error ? error.message : error);
       }
     };
 
