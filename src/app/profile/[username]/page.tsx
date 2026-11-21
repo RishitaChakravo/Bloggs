@@ -53,8 +53,8 @@ export default function PublicProfilePage() {
         setUser(res.data.data);
         setHasFollowed(res.data.data.hasFollowed);
         setFollowCount(res.data.data.followers);
-      } catch (err) {
-        console.error("Failed to fetch user", err);
+      } catch (error) {
+        console.error("Failed to fetch user", error instanceof Error ? error.message : error);
       }
     };
 
@@ -62,8 +62,8 @@ export default function PublicProfilePage() {
       try {
         const res = await axios.get(`/api/users/blogDisplay?username=${username}`);
         setBlogs(res.data.blogs);
-      } catch (err) {
-        console.error("Failed to fetch blogs", err);
+      } catch (error) {
+        console.error("Failed to fetch blogs", error instanceof Error ? error.message : error);
       }
     };
 
@@ -82,8 +82,8 @@ export default function PublicProfilePage() {
         toast.success(`You followed ${user?.name}`);
       }
       setHasFollowed(!hasFollowed);
-    } catch (err: any) {
-      toast.error(err.response?.data?.error || "Failed to follow/unfollow");
+    } catch (error) {
+      toast.error("Failed to follow/unfollow", error instanceof Error ? error.message : error);
     }
   };
 
