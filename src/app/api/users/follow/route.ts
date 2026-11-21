@@ -44,8 +44,8 @@ export async function POST(request: NextRequest) {
                 data: newFollow
             }, { status: 200 })
         }
-    } catch (error: any) {
-        console.error("something went wrong while sending follow request", error)
+    } catch (error) {
+        console.error("something went wrong while sending follow request", error instanceof Error ? error.message : error)
         return NextResponse.json({
             error: "Internal Server Error",
             success: false
