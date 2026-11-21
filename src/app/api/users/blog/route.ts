@@ -3,10 +3,16 @@ import { NextRequest, NextResponse } from "next/server";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import { dbConnect } from "@/dbConfig/dbConnect";
 
+interface BlogRequest {
+    content: string;
+    tags: string[];
+    title: string;
+}
+
 export async function POST(request: NextRequest){
     await dbConnect()
     try {
-        const reqbody: any = await request.json()
+        const reqbody: BlogRequest = await request.json()
         const {content, tags, title} = await reqbody
 
         if(!content || !tags || !title ){
