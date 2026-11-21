@@ -14,8 +14,8 @@ export async function dbConnect() {
             process.exit(1)
         })
 
-    } catch (error: any) {
+    } catch (error) {
         console.log("Failed to connect to MongoDB!!")
-        console.log(error)
+        console.log(error instanceof Error ? error.message : error)
     }
 }
