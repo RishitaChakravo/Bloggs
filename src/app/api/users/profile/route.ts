@@ -90,6 +90,7 @@ export async function GET(request : NextRequest){
         }, {status: 200})
 
     } catch (error) {
+        console.error(error instanceof Error ? error.message : error)
         return NextResponse.json(
         {
             error: "Failed to fetch user profile",
