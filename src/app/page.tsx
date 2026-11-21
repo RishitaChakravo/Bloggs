@@ -27,7 +27,7 @@ export default function Home() {
           isLoggedIn: true
         });
       } catch (error) {
-        console.log("failed to fetch user data");
+        console.log("failed to fetch user data", error instanceof Error ? error.message : error);
       }
     };
     userProfile();
