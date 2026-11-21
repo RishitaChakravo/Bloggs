@@ -1,13 +1,11 @@
 "use client"
 
-import { useRouter } from "next/navigation";
 import { AuroraBackground } from "../ui/aurora-background";
 import Link from "next/link";
 import axios from "axios";
 import { useEffect, useState } from "react";
 
 export default function HeroSec() {
-    const router = useRouter()
     const [success, setSuccess] = useState(false)
 
     useEffect(() => {
