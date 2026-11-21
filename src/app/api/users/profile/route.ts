@@ -18,8 +18,6 @@ export async function GET(request : NextRequest){
         if (!userId) {
         return NextResponse.json({ error: "Invalid or expired token" }, { status: 401 });
         }
-        
-        const user = await User.findById(userId)
 
         const updatedUser = await User.aggregate([
             {
