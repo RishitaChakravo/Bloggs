@@ -55,7 +55,11 @@ export default function BlogCard2({ blog }: { blog: Blog }) {
         <div className="flex h-[500px] w-[500px] z-50 border rounded-2xl">
             <div className={`relative p-5 h-full w-full bg-gradient-to-t from-slate-800 to-slate-900 rounded-l-2xl ${onComment ? 'overflow-clip' : 'overflow-auto'}`}>
                 <div className="mb-2 flex items-center gap-3">
-                    <img src={blog.author.profileImage} className="h-12 w-12 rounded-full"></img>
+                    <img
+                        src={blog.author.profileImage}
+                        className="h-12 w-12 rounded-full"
+                        alt="Author"
+                    />
                     <div>
                         <p className="font-serif">{blog.author.name}</p>
                         <p className="text-white/50 text-sm">@{blog.author.username}</p>
@@ -104,6 +108,7 @@ export default function BlogCard2({ blog }: { blog: Blog }) {
                                 </div>
                             </div>}
                     </div>}
+            </div>
             </div>
             <div className="h-full w-[10%] flex flex-col gap-2 justify-end items-center py-5">
                 <div>
