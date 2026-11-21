@@ -29,7 +29,7 @@ export async function GET(request: NextRequest){
                 message: "User isnt logged In",
                 success: false
             }, {status: 200})
-    } catch (error: any) {
-        return NextResponse.json({error: error.message || "Failed to login status"})
+    } catch (error) {
+        return NextResponse.json({error: error instanceof Error ? error.message : error || "Failed to login status"})
     }
 }
