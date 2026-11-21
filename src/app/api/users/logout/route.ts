@@ -17,7 +17,7 @@ export async function POST(request: NextRequest){
         }
 
         const userId = await getDataFromToken(token!)
-        const user = await User.findByIdAndUpdate(userId, {
+        await User.findByIdAndUpdate(userId, {
             isLoggedIn: false
         })
 
