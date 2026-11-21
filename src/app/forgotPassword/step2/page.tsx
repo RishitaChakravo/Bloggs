@@ -36,8 +36,8 @@ export default function PASSWORDRESET() {
             } else {
                 toast.error(response.data.error || "Something went wrong");
             }
-        } catch (error:any) {
-            toast.error(error?.response?.data?.error || "Server error");
+        } catch (error) {
+            toast.error("Server error");
         } 
     }
 
