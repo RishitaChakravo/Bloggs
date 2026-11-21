@@ -22,8 +22,8 @@ export async function uploadCloudinary(localFilePath: string){
         console.log("File uploaded successfully", response.url)
         return response
         
-    } catch (error: any) {
+    } catch (error) {
         fs.unlinkSync(localFilePath)
-        console.error("File uplaod in cloudinary failed", error)
+        console.error("File uplaod in cloudinary failed", error instanceof Error ? error.message : error)
     }
 }
