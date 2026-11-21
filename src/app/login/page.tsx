@@ -28,7 +28,7 @@ export default function Login() {
             setMessage(response.data.message);
             setSuccess(response.data.success);
             toast.success("Logged in successfully");
-        } catch (error: any) {
+        } catch (error) {
             toast.error("Login failed");
             setSuccess(false);
             setMessage("Invalid credentials or server error");
