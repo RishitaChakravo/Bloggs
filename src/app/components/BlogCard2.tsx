@@ -4,13 +4,6 @@ import { Heart, MessageCircle } from "lucide-react";
 import { Blog, User } from "../search/page";
 import { useState } from "react";
 import axios from "axios";
-import { Playfair_Display } from "next/font/google";
-
-const playfair = Playfair_Display({
-    subsets: ["latin"],
-    weight: ["400", "500", "600", "700"],
-});
-
 
 export interface Comment {
     content: string;
@@ -64,12 +57,12 @@ export default function BlogCard2({ blog }: { blog: Blog }) {
                 <div className="mb-2 flex items-center gap-3">
                     <img src={blog.author.profileImage} className="h-12 w-12 rounded-full"></img>
                     <div>
-                        <p className={`${playfair.className}`}>{blog.author.name}</p>
+                        <p className="font-serif">{blog.author.name}</p>
                         <p className="text-white/50 text-sm">@{blog.author.username}</p>
                     </div>
                 </div>
                 <hr className="w-full my-3"></hr>
-                <div className={`text-3xl font-extralight leading-tight ${playfair.className}`}>{blog.title}</div>
+                <div className="text-3xl font-extralight leading-tight font-serif">
                 <div className="mt-5">{blog.content}</div>
                 <div className="mt-3 text-white/50">{blog.tags.map((tag, idx) => (<span key={idx}>#{tag}</span>))}</div>
                 {onComment &&
