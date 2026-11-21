@@ -16,11 +16,15 @@ export default function HeroSec() {
                 const response = await axios.get('/api/users/loginCheck')
                 console.log(response.data.message)
                 setSuccess(response.data.success)
-            } catch (error: any) {
-                if (error.response?.status === 401) {
-                    setSuccess(false);
+            } catch (error) {
+                if (axios.isAxiosError(error)) {
+                    if (error.response?.status === 401) {
+                        setSuccess(false);
+                    } else {
+                        console.error("Unexpected error in login check:", error.message);
+                    }
                 } else {
-                    console.error("Unexpected error in login check:", error.message);
+                    console.error("Unexpected error in login check:", error);
                 }
             }
         }
