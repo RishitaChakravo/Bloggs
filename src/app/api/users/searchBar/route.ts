@@ -178,6 +178,7 @@ export async function GET(request: NextRequest) {
             users
         }, { status: 200 })
     } catch (error) {
+        console.error(error instanceof Error ? error.message : error)
         return NextResponse.json({ message: "Failed while searching" }, { status: 500 })
     }
 }
