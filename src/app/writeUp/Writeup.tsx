@@ -2,7 +2,7 @@
 
 import axios from "axios";
 import { useState } from "react"
-import { NavBar } from "../components/navbar/page";
+import { NavBar } from "../components/navbar/Navbar";
 import toast from "react-hot-toast";
 import { Toaster } from "react-hot-toast";
 
