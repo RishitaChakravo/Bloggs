@@ -41,6 +41,7 @@ export async function POST(request: NextRequest) {
             success: true,
         }, { status: 200 })
     } catch (error) {
+        console.error(error instanceof Error ? error.message : error)
         return NextResponse.json({
             message: "Something went wrong",
             success: false
