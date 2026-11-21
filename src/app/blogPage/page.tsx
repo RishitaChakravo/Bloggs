@@ -30,8 +30,8 @@ export default function BlogPage() {
                 const response = await axios.get(endpoint)
                 console.log(`${response.status}: blogs displayed`, response.data.message)
                 setBlogs(response.data.blogs)
-            } catch (error: any) {
-                console.error("Blogs not displayed", error.message)
+            } catch (error) {
+                console.error("Blogs not displayed", error instanceof Error ? error.message : error)
             }
         }
 
