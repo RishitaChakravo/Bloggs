@@ -33,7 +33,7 @@ export async function POST(request: NextRequest){
 
         return response
     } catch (error) {
-        console.error("Something went wrong while logging out", errorerror instanceof Error ? error.message : error
+        console.error("Something went wrong while logging out", error instanceof Error ? error.message : error
 )
         return NextResponse.json({
             message: "Logout failed",
