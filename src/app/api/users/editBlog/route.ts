@@ -36,8 +36,8 @@ export async function POST(request: NextRequest) {
             success: true,
             blog: updatedBlog
         }, {status: 200})
-    } catch (error: any) {
-        console.error("Update Blog Error:", error.message);
+    } catch (error) {
+        console.error("Update Blog Error:", error instanceof Error ? error.message : error);
         return NextResponse.json(
             {
                 message: "Internal server error",
