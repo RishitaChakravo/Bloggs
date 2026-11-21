@@ -1,9 +1,8 @@
 'use client'
 
 import axios from "axios";
-import { BookText, FileText, Newspaper } from "lucide-react";
+import { Newspaper } from "lucide-react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 
 interface NavProp {
