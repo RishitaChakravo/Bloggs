@@ -16,8 +16,8 @@ export async function GET(request: NextRequest){
             message: "Logged In",
             success: true
         }, {status: 200})
-    } catch (error:any) {
-        console.error("Error in login check:", error);
+    } catch (error) {
+        console.error("Error in login check:", error instanceof Error ? error.message : error);
         return NextResponse.json({
             message: "Internal server error",
             success: false
