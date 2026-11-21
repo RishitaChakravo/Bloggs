@@ -3,7 +3,7 @@
 import axios from "axios";
 import Footer from "./components/footer/footer";
 import HeroSec from "./components/heroSec/page";
-import { NavBar } from "./components/navbar/page";
+import { NavBar } from "./components/navbar/Navbar";
 import UserIcon from "./components/userIcon/page";
 import { useEffect, useState } from "react";
 import { InfiniteCards } from "./components/InfiniteCards";
