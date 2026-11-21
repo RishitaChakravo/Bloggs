@@ -40,7 +40,7 @@ export async function POST(request: NextRequest) {
             message: "Valid OTP",
             success: true,
         }, { status: 200 })
-    } catch (error: any) {
+    } catch (error) {
         return NextResponse.json({
             message: "Something went wrong",
             success: false
