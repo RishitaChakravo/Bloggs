@@ -1,7 +1,6 @@
 import { dbConnect } from "@/dbConfig/dbConnect";
 import { getDataFromToken } from "@/helpers/getDataFromToken";
 import Blog from "@/models/blogModel";
-import Like from "@/models/likeSchema";
 import User from "@/models/userModel";
 import mongoose from "mongoose";
 import { NextRequest, NextResponse } from "next/server";
