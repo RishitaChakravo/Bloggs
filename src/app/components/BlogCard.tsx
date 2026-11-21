@@ -50,8 +50,8 @@ export default function BlogCard({ blog, showButton = false }: Props) {
                 setLiked(false)
                 setLikesCount(prev => prev - 1)
             }
-        } catch (error: any) {
-            console.log("Like/Unlike process failed", error.message)
+        } catch (error) {
+            console.log("Like/Unlike process failed", error instanceof Error ? error.message : error)
         }
     }
 
@@ -63,8 +63,8 @@ export default function BlogCard({ blog, showButton = false }: Props) {
             } else {
                 toast.error(response.data.message || "Failed to edit blog");
             }
-        } catch (error: any) {
-            console.error(error.message)
+        } catch (error) {
+            console.error(error instanceof Error ? error.message : error)
             toast.error("An error occurred while editing the blog.")
         }
     }
@@ -75,8 +75,8 @@ export default function BlogCard({ blog, showButton = false }: Props) {
             if (response.data.success) {
                 toast.success("Blog deleted successfully")
             }
-        } catch (error: any) {
-            console.error(error.message)
+        } catch (error) {
+            console.error(error instanceof Error ? error.message : error)
         }
     }
 
