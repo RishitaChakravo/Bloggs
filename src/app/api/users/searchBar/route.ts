@@ -177,7 +177,7 @@ export async function GET(request: NextRequest) {
             blogs,
             users
         }, { status: 200 })
-    } catch (error: any) {
+    } catch (error) {
         return NextResponse.json({ message: "Failed while searching" }, { status: 500 })
     }
 }
