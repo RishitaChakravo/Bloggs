@@ -28,8 +28,8 @@ export default function UserCard({ user }: Props) {
                 setFollowerCount(prev => prev + 1)
             }
             console.log("Follow request sent successfully", response.data);
-        } catch (error: any) {
-            console.log(error.message)
+        } catch (error) {
+            console.log(error instanceof Error ? error.message : error)
         }
     }
     return (
