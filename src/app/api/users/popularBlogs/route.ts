@@ -40,6 +40,7 @@ export async function GET(){
         }, {status: 200})
 
     } catch (error) {
+        console.error(error instanceof Error ? error.message : error)
         return NextResponse.json({
             error: "Error in fetching blogs",
             success: false
