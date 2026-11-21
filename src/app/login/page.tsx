@@ -29,7 +29,7 @@ export default function Login() {
             setSuccess(response.data.success);
             toast.success("Logged in successfully");
         } catch (error) {
-            toast.error("Login failed");
+            toast.error("Login failed", error instanceof Error ? error.message : error);
             setSuccess(false);
             setMessage("Invalid credentials or server error");
         } finally {
@@ -95,7 +95,7 @@ export default function Login() {
                         </Link>
                     </p>
                     <p className="m-0">
-                        Don't have an account?{" "}
+                        Don&apos;t have an account?{" "}
                         <Link href="/signup" className="text-blue-500 hover:underline">
                         Sign Up
                         </Link>
