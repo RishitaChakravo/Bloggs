@@ -37,7 +37,7 @@ export default function PASSWORDRESET() {
                 toast.error(response.data.error || "Something went wrong");
             }
         } catch (error) {
-            toast.error("Server error");
+            toast.error("Server error", error instanceof Error ? error.message : error);
         } 
     }
 
